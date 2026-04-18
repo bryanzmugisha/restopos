@@ -5,6 +5,9 @@ import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
 const roleRoutes: Record<string, { label: string; href: string; icon: string; color: string }[]> = {
+  SUPER_ADMIN: [
+    { label: 'All Restaurants', href: '/superadmin', icon: '🏪', color: '#f97316' },
+  ],
   ADMIN: [
     { label: 'POS / Orders', href: '/pos', icon: '🧾', color: '#f97316' },
     { label: 'Tables', href: '/tables', icon: '🪑', color: '#3b82f6' },
@@ -87,6 +90,7 @@ export default function DashboardPage() {
               background: '#27272a', color: '#f97316', fontWeight: '600',
             }}>{role}</span>
           </div>
+          <button onClick={() => router.push('/profile')} style={{ padding: '8px 14px', borderRadius: '8px', border: '1px solid #3f3f46', background: 'transparent', color: '#a1a1aa', cursor: 'pointer', fontSize: '13px' }}>Profile</button>
           <button onClick={() => signOut({ callbackUrl: '/login' })}
             style={{
               padding: '8px 14px', borderRadius: '8px', border: '1px solid #3f3f46',

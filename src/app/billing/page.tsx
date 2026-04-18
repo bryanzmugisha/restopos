@@ -120,7 +120,10 @@ export default function BillingPage() {
               <p style={{ fontSize:'22px', fontWeight:'700', color:'#22c55e', marginBottom:'8px' }}>Payment Complete!</p>
               <p style={{ color:C.m }}>{selected.orderNumber} · {fmt(finalTotal)}</p>
               {change > 0 && <p style={{ color:C.br, fontWeight:'700', fontSize:'18px', marginTop:'8px' }}>Change: {fmt(change)}</p>}
-              <button onClick={() => { setSelected(null); setPaid(false) }} style={{ marginTop:'24px', padding:'10px 24px', borderRadius:'10px', background:C.s, border:`1px solid ${C.b}`, color:C.t, cursor:'pointer', fontSize:'14px' }}>Next Order</button>
+              <div style={{ display:'flex', gap:'10px', marginTop:'24px' }}>
+                <button onClick={() => { setSelected(null); setPaid(false) }} style={{ flex:1, padding:'10px 24px', borderRadius:'10px', background:C.s, border:`1px solid ${C.b}`, color:C.t, cursor:'pointer', fontSize:'14px' }}>Next Order</button>
+                <button onClick={() => window.open('/receipt', '_blank')} style={{ flex:1, padding:'10px 24px', borderRadius:'10px', background:'#22c55e', border:'none', color:'white', cursor:'pointer', fontSize:'14px', fontWeight:'700' }}>🖨️ Print Receipt</button>
+              </div>
             </div>
           ) : (
             <div style={{ maxWidth:'520px' }}>

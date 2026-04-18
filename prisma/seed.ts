@@ -19,6 +19,21 @@ async function main() {
     },
   })
 
+  // Super Admin (Bryan - manages all restaurants)
+  const superHash = await bcrypt.hash('superadmin123', 10)
+  await prisma.user.upsert({
+    where: { email: 'super@restopos.com' },
+    update: {},
+    create: {
+      name: 'Super Admin',
+      email: 'super@restopos.com',
+      passwordHash: superHash,
+      role: 'SUPER_ADMIN',
+      outletId: outlet.id,
+      pin: '0000',
+    },
+  })
+
   // Admin user
   const adminHash = await bcrypt.hash('admin123', 10)
   await prisma.user.upsert({
