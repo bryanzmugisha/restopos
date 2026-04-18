@@ -17,6 +17,7 @@ export default function BillingPage() {
   const [discountPct, setDiscountPct] = useState('0')
   const [processing, setProcessing] = useState(false)
   const [paid, setPaid] = useState(false)
+  const [lastBillId, setLastBillId] = useState('')
   const [toast, setToast] = useState('')
 
   useEffect(() => { if (status === 'unauthenticated') router.push('/login') }, [status])
@@ -55,6 +56,8 @@ export default function BillingPage() {
         }),
       })
       if (res.ok) {
+        const billData = await res.json()
+        setLastBillId(billData.id ?? '')
         setPaid(true)
         setOrders(o => o.filter(x => x.id !== selected.id))
         showToast('✅ Payment processed!')
@@ -122,7 +125,7 @@ export default function BillingPage() {
               {change > 0 && <p style={{ color:C.br, fontWeight:'700', fontSize:'18px', marginTop:'8px' }}>Change: {fmt(change)}</p>}
               <div style={{ display:'flex', gap:'10px', marginTop:'24px' }}>
                 <button onClick={() => { setSelected(null); setPaid(false) }} style={{ flex:1, padding:'10px 24px', borderRadius:'10px', background:C.s, border:`1px solid ${C.b}`, color:C.t, cursor:'pointer', fontSize:'14px' }}>Next Order</button>
-                <button onClick={() => window.open('/receipt', '_blank')} style={{ flex:1, padding:'10px 24px', borderRadius:'10px', background:'#22c55e', border:'none', color:'white', cursor:'pointer', fontSize:'14px', fontWeight:'700' }}>🖨️ Print Receipt</button>
+                <button onClick={() => window.open('/receipt?id=' + (lastBillId || ''), '_blank')} style={{ flex:1, padding:'10px 24px', borderRadius:'10px', background:'#22c55e', border:'none', color:'white', cursor:'pointer', fontSize:'14px', fontWeight:'700' }}>🖨️ Print Receipt</button>
               </div>
             </div>
           ) : (

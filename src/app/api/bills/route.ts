@@ -98,7 +98,7 @@ export async function POST(req: Request) {
       return newBill
     })
 
-    return NextResponse.json(bill, { status: 201 })
+    return NextResponse.json({ ...bill, id: bill.id }, { status: 201 })
   } catch (e) {
     console.error(e)
     return NextResponse.json({ error: 'Failed to process bill' }, { status: 500 })
