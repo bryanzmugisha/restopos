@@ -48,6 +48,15 @@ const roleRoutes: Record<string, { label: string; href: string; icon: string; co
   KITCHEN_STAFF: [
     { label: 'Kitchen Display', href: '/kitchen', icon: '👨‍🍳', color: '#22c55e' },
   ],
+  BAR_STAFF: [
+    { label: 'Bar Display', href: '/bar', icon: '🍺', color: '#6366f1' },
+    { label: 'Take Order', href: '/pos', icon: '🧾', color: '#f97316' },
+    { label: 'My Orders', href: '/my-orders', icon: '📋', color: '#06b6d4' },
+    { label: 'Billing', href: '/billing', icon: '💰', color: '#22c55e' },
+  ],
+  DELIVERY_STAFF: [
+    { label: 'My Orders', href: '/my-orders', icon: '📋', color: '#06b6d4' },
+  ],
 }
 
 export default function DashboardPage() {
