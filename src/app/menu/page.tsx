@@ -178,11 +178,13 @@ export default function MenuPage() {
           <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(220px, 1fr))', gap:'12px' }}>
             {cats.map(c => {
               const station = (c as any).station ?? 'KITCHEN'
-              const stationConfig = {
+              type StationKey = 'KITCHEN'|'BAR'|'ALL'
+              const stationConfigs: Record<StationKey, {label:string;color:string;bg:string;border:string}> = {
                 KITCHEN: { label:'🍳 Kitchen', color:'#f97316', bg:'#1a0f00', border:'#78350f' },
                 BAR:     { label:'🍺 Bar / Counter', color:'#6366f1', bg:'#1e1b4b', border:'#4338ca' },
                 ALL:     { label:'📦 All Stations', color:'#22c55e', bg:'#052e16', border:'#16a34a' },
-              }[station] ?? { label:'🍳 Kitchen', color:'#f97316', bg:'#1a0f00', border:'#78350f' }
+              }
+              const stationConfig = stationConfigs[(station as StationKey)] ?? stationConfigs.KITCHEN
               return (
                 <div key={c.id} style={{ background:C.s, border:`2px solid ${stationConfig.border}`, borderRadius:'12px', padding:'16px' }}>
                   <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'10px' }}>
