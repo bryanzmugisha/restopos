@@ -58,7 +58,7 @@ export default function DashboardPage() {
     if (status === 'unauthenticated') router.push('/login')
     if (status === 'authenticated' && session) {
       if (session.user.role === 'KITCHEN_STAFF') router.push('/kitchen')
-      if (session.user.role === 'BAR_STAFF') router.push('/bar')
+      // BAR_STAFF sees dashboard (removed auto-redirect)
     }
   }, [status, session, router])
 
