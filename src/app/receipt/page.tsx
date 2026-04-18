@@ -105,7 +105,7 @@ function ReceiptContent() {
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', background: C.bg, gap: '12px' }}>
       <p style={{ fontSize: '40px' }}>🧾</p>
       <p style={{ color: C.m, fontSize: '16px' }}>Receipt not found</p>
-      <button onClick={() => router.back()} style={{ padding: '10px 24px', borderRadius: '8px', background: C.br, border: 'none', color: 'white', cursor: 'pointer' }}>Go Back</button>
+      <button onClick={() => { if (window.opener || window.history.length <= 1) window.close(); else router.push('/billing') }} style={{ padding: '10px 24px', borderRadius: '8px', background: C.br, border: 'none', color: 'white', cursor: 'pointer' }}>Go Back</button>
     </div>
   )
 
@@ -123,7 +123,7 @@ function ReceiptContent() {
 
       {/* Action buttons */}
       <div className="no-print" style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: '16px', flexWrap: 'wrap', maxWidth: '340px', margin: '0 auto 16px' }}>
-        <button onClick={() => router.back()} style={{ padding: '10px 14px', borderRadius: '8px', background: C.s, border: `1px solid ${C.b}`, color: C.m, cursor: 'pointer', fontSize: '13px' }}>← Back</button>
+        <button onClick={() => { if (window.opener || window.history.length <= 1) window.close(); else router.push('/billing') }} style={{ padding: '10px 14px', borderRadius: '8px', background: C.s, border: `1px solid ${C.b}`, color: C.m, cursor: 'pointer', fontSize: '13px' }}>← Back</button>
         <button onClick={handlePrint} style={{ flex: 1, padding: '10px 14px', borderRadius: '8px', background: '#1e3a5f', border: '1px solid #3b82f6', color: '#60a5fa', cursor: 'pointer', fontWeight: '700', fontSize: '13px' }}>🖨️ Print</button>
         <button onClick={handleWhatsApp} style={{ flex: 1, padding: '10px 14px', borderRadius: '8px', background: '#052e16', border: '1px solid #22c55e', color: '#22c55e', cursor: 'pointer', fontWeight: '700', fontSize: '13px' }}>📱 WhatsApp</button>
         <button onClick={handleSaveImage} disabled={sharing} style={{ flex: 1, padding: '10px 14px', borderRadius: '8px', background: '#1a0f00', border: `1px solid ${C.br}`, color: C.br, cursor: 'pointer', fontWeight: '700', fontSize: '13px', opacity: sharing ? 0.7 : 1 }}>
