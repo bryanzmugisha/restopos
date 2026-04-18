@@ -89,7 +89,7 @@ export async function POST(req: Request) {
       })
 
       // Create separate KOTs per station
-      const stations = [...new Set(items.map((i: any) => itemStationMap[i.menuItemId] ?? 'KITCHEN'))]
+      const stations = Array.from(new Set(items.map((i: any) => itemStationMap[i.menuItemId] ?? 'KITCHEN')))
       for (const station of stations) {
         await tx.kot.create({
           data: {

@@ -166,7 +166,7 @@ model Kot {
   id          String    @id @default(cuid())
   kotNumber   String
   orderId     String
-  station     String    @default("KITCHEN")
+  station     String?   @default("KITCHEN")
   status      String    @default("PENDING")
   printedAt   DateTime?
   acknowledgedAt DateTime?
