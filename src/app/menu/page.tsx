@@ -22,6 +22,7 @@ export default function MenuPage() {
   const [form, setForm] = useState(blank())
   const [catModal, setCatModal] = useState(false)
   const [catInput, setCatInput] = useState('')
+  const [catStation, setCatStation] = useState('KITCHEN')
   const [saving, setSaving] = useState(false)
   const [toast, setToast] = useState('')
 
@@ -85,7 +86,7 @@ export default function MenuPage() {
       const res = await fetch('/api/menu/categories', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: catInput.trim(), station: (document.getElementById('cat-station') as HTMLSelectElement)?.value ?? 'KITCHEN' }),
+        body: JSON.stringify({ name: catInput.trim(), station: catStation }),
       })
       if (res.ok) { const c = await res.json(); setCats(x => [...x, c]); setCatInput(''); setCatModal(false); showToast('✅ Category added') }
     } catch { showToast('❌ Error') }
@@ -171,13 +172,39 @@ export default function MenuPage() {
 
       {tab === 'categories' && (
         <div style={{ flex:1, overflowY:'auto', padding:'20px' }}>
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(180px, 1fr))', gap:'12px' }}>
-            {cats.map(c => (
-              <div key={c.id} style={{ background:C.s, border:`1px solid ${C.b}`, borderRadius:'12px', padding:'18px' }}>
-                <p style={{ fontSize:'16px', fontWeight:'700', color:C.t, marginBottom:'6px' }}>{c.name}</p>
-                <p style={{ fontSize:'13px', color:C.m }}>{items.filter(i => i.categoryId === c.id).length} items</p>
-              </div>
-            ))}
+          <div style={{ background:'#1a0f00', border:'1px solid #78350f', borderRadius:'10px', padding:'12px 16px', marginBottom:'16px', fontSize:'13px', color:'#f59e0b' }}>
+            💡 Set each category to the correct station so orders are automatically routed — food goes to Kitchen, drinks go to Bar.
+          </div>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(220px, 1fr))', gap:'12px' }}>
+            {cats.map(c => {
+              const station = (c as any).station ?? 'KITCHEN'
+              const stationConfig = {
+                KITCHEN: { label:'🍳 Kitchen', color:'#f97316', bg:'#1a0f00', border:'#78350f' },
+                BAR:     { label:'🍺 Bar / Counter', color:'#6366f1', bg:'#1e1b4b', border:'#4338ca' },
+                ALL:     { label:'📦 All Stations', color:'#22c55e', bg:'#052e16', border:'#16a34a' },
+              }[station] ?? { label:'🍳 Kitchen', color:'#f97316', bg:'#1a0f00', border:'#78350f' }
+              return (
+                <div key={c.id} style={{ background:C.s, border:`2px solid ${stationConfig.border}`, borderRadius:'12px', padding:'16px' }}>
+                  <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'10px' }}>
+                    <div>
+                      <p style={{ fontSize:'16px', fontWeight:'700', color:C.t, margin:'0 0 4px' }}>{c.name}</p>
+                      <p style={{ fontSize:'12px', color:C.m, margin:0 }}>{items.filter(i => i.categoryId === c.id).length} items</p>
+                    </div>
+                    <span style={{ fontSize:'11px', padding:'3px 8px', borderRadius:'6px', background:stationConfig.bg, color:stationConfig.color, fontWeight:'700', border:`1px solid ${stationConfig.border}` }}>{stationConfig.label}</span>
+                  </div>
+                  <div style={{ display:'flex', gap:'6px' }}>
+                    {['KITCHEN','BAR','ALL'].map(s => (
+                      <button key={s} onClick={async () => {
+                        const res = await fetch('/api/menu/categories', { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ id: c.id, name: c.name, station: s }) })
+                        if (res.ok) fetchAll()
+                      }} style={{ flex:1, padding:'5px', borderRadius:'6px', border:`1px solid ${station===s ? stationConfig.border : C.b}`, background:station===s ? stationConfig.bg : 'transparent', color:station===s ? stationConfig.color : C.m, cursor:'pointer', fontSize:'10px', fontWeight:'700' }}>
+                        {s==='KITCHEN'?'🍳':s==='BAR'?'🍺':'📦'}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
       )}
