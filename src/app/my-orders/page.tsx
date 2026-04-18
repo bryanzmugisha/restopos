@@ -195,6 +195,10 @@ export default function MyOrdersPage() {
                     + Add Items
                   </button>
                 )}
+                <button onClick={() => window.open(`/invoice?orderId=${order.id}`, '_blank')}
+                  style={{ flex:1, padding:'8px', borderRadius:'8px', background:'#1e3a5f', border:'1px solid #3b82f6', color:'#60a5fa', cursor:'pointer', fontSize:'13px' }}>
+                  📋 Invoice
+                </button>
                 <button onClick={() => window.open(`/receipt?orderId=${order.id}`, '_blank')}
                   style={{ flex:1, padding:'8px', borderRadius:'8px', background:C.s, border:`1px solid ${C.b}`, color:C.m, cursor:'pointer', fontSize:'13px' }}>
                   🧾 Receipt

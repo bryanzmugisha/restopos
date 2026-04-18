@@ -56,7 +56,11 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/login')
-  }, [status, router])
+    if (status === 'authenticated' && session) {
+      if (session.user.role === 'KITCHEN_STAFF') router.push('/kitchen')
+      if (session.user.role === 'BAR_STAFF') router.push('/bar')
+    }
+  }, [status, session, router])
 
   if (status === 'loading') return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', color: '#71717a' }}>

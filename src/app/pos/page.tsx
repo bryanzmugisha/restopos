@@ -115,7 +115,16 @@ export default function POSPage() {
       const data = await res.json()
       if (res.ok) {
         setCart([]); setTableId(''); setCustomer(null); setNotes(''); setShowCart(false)
-        showToast(`✅ ${data.orderNumber} — KOT sent!`)
+        showToast(`✅ ${data.orderNumber} — KOT sent!
+📋 Send invoice? Click to open`)
+        // Auto-offer invoice after 1s
+        setTimeout(() => {
+          if (confirm(`Order ${data.orderNumber} placed!
+
+Send invoice to customer now?`)) {
+            window.open(`/invoice?orderId=${data.id}`, '_blank')
+          }
+        }, 500)
       } else showToast('❌ ' + (data.detail || data.error), false)
     } catch (e: any) { showToast('❌ ' + (e?.message || 'Error'), false) }
     setPlacing(false)
