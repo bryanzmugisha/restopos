@@ -52,6 +52,7 @@ model MenuCategory {
   imageUrl  String?
   sortOrder Int        @default(0)
   isActive  Boolean    @default(true)
+  station   String     @default("KITCHEN")
   createdAt DateTime   @default(now())
 
   items MenuItem[]
@@ -165,7 +166,7 @@ model Kot {
   id          String    @id @default(cuid())
   kotNumber   String
   orderId     String
-  station     String?
+  station     String    @default("KITCHEN")
   status      String    @default("PENDING")
   printedAt   DateTime?
   acknowledgedAt DateTime?

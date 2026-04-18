@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     const body = await req.json()
     const category = await prisma.menuCategory.create({
-      data: { name: body.name, sortOrder: body.sortOrder ?? 0 },
+      data: { name: body.name, sortOrder: body.sortOrder ?? 0, station: body.station ?? 'KITCHEN' },
     })
     return NextResponse.json(category, { status: 201 })
   } catch (e: any) { console.error("Failed to create category:", e?.message)

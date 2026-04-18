@@ -19,6 +19,7 @@ const roleRoutes: Record<string, { label: string; href: string; icon: string; co
     { label: 'Customers', href: '/customers', icon: '👥', color: '#84cc16' },
     { label: 'Reservations', href: '/reservations', icon: '📅', color: '#8b5cf6' },
     { label: 'Employees', href: '/employees', icon: '👤', color: '#14b8a6' },
+    { label: 'Bar Display', href: '/bar', icon: '🍺', color: '#6366f1' },
     { label: 'Performance', href: '/performance', icon: '🏆', color: '#f59e0b' },
     { label: 'My Orders', href: '/my-orders', icon: '📋', color: '#06b6d4' },
     { label: 'Users', href: '/users', icon: '🔑', color: '#ec4899' },

@@ -9,7 +9,7 @@ const roleColors: Record<string,string> = {
   ADMIN:'#a855f7', MANAGER:'#3b82f6', CASHIER:'#22c55e',
   WAITER:'#f97316', KITCHEN_STAFF:'#ef4444', DELIVERY_STAFF:'#f59e0b',
 }
-const roles = ['ADMIN','MANAGER','CASHIER','WAITER','KITCHEN_STAFF','DELIVERY_STAFF']
+const roles = ['ADMIN','MANAGER','CASHIER','WAITER','KITCHEN_STAFF','BAR_STAFF','DELIVERY_STAFF']
 const roleDesc: Record<string,string> = {
   ADMIN:'Full system access — all modules, settings, reports',
   MANAGER:'All operations, reports, inventory — no system settings',

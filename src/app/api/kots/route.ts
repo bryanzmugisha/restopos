@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getAuth } from '@/lib/auth'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   try {
     const session = await getAuth()
@@ -9,6 +11,7 @@ export async function GET() {
 
     const kots = await prisma.kot.findMany({
       where: {
+        station: { in: ['KITCHEN', 'ALL'] },
         status: { not: 'COMPLETED' },
         order: { outletId: session.user.outletId },
       },
