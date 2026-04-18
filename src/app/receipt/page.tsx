@@ -34,27 +34,31 @@ function ReceiptContent() {
   const handlePrint = () => window.print()
 
   const handleWhatsApp = () => {
-    if (!receipt) return
+    const d = data
     const lines = [
-      `🍽️ *${receipt.outletName}*`,
-      `📄 Receipt: ${receipt.billNumber}`,
-      `📅 ${new Date(receipt.paidAt).toLocaleString()}`,
+      `🍽️ *${d.outletName}*`,
+      `📄 Receipt: ${d.billNumber}`,
+      `📅 ${new Date(d.paidAt).toLocaleString()}`,
       ``,
       `*ITEMS*`,
-      ...receipt.items.map(i => `${i.name} x${i.quantity} — ${fmt(i.totalPrice)}`),
+      ...d.items.map((i: any) => `${i.name} x${i.quantity} — ${fmt(i.totalPrice)}`),
       ``,
-      `Subtotal: ${fmt(receipt.subtotal)}`,
-      receipt.taxAmount > 0 ? `Tax: ${fmt(receipt.taxAmount)}` : '',
-      receipt.discountAmount > 0 ? `Discount: -${fmt(receipt.discountAmount)}` : '',
-      `*TOTAL: ${fmt(receipt.totalAmount)}*`,
+      `Subtotal: ${fmt(d.subtotal)}`,
+      d.taxAmount > 0 ? `Tax: ${fmt(d.taxAmount)}` : '',
+      d.discountAmount > 0 ? `Discount: -${fmt(d.discountAmount)}` : '',
+      `*TOTAL: ${fmt(d.totalAmount)}*`,
       ``,
-      `Payment: ${receipt.paymentMethod.replace('_',' ')}`,
+      `Payment: ${d.paymentMethod.replace('_',' ')}`,
       ``,
-      `Thank you for visiting ${receipt.outletName}! 🙏`,
+      `Thank you for visiting ${d.outletName}! 🙏`,
     ].filter(Boolean).join('\n')
 
-    const encoded = encodeURIComponent(lines)
-    window.open(`https://wa.me/?text=${encoded}`, '_blank')
+    const text = lines.join('\n')
+    const encoded = encodeURIComponent(text)
+    // Try WhatsApp Web first, fallback to app
+    const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent)
+    const waUrl = isMobile ? `whatsapp://send?text=${encoded}` : `https://web.whatsapp.com/send?text=${encoded}`
+    window.open(waUrl, '_blank')
   }
 
   const C = { bg:'#09090b', s:'#18181b', b:'#27272a', t:'#fafafa', m:'#71717a', br:'#f97316' }

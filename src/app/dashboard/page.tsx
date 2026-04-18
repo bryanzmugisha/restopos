@@ -19,6 +19,8 @@ const roleRoutes: Record<string, { label: string; href: string; icon: string; co
     { label: 'Customers', href: '/customers', icon: '👥', color: '#84cc16' },
     { label: 'Reservations', href: '/reservations', icon: '📅', color: '#8b5cf6' },
     { label: 'Employees', href: '/employees', icon: '👤', color: '#14b8a6' },
+    { label: 'Performance', href: '/performance', icon: '🏆', color: '#f59e0b' },
+    { label: 'My Orders', href: '/my-orders', icon: '📋', color: '#06b6d4' },
     { label: 'Users', href: '/users', icon: '🔑', color: '#ec4899' },
     { label: 'Settings', href: '/settings', icon: '⚙️', color: '#6b7280' },
   ],
@@ -33,10 +35,12 @@ const roleRoutes: Record<string, { label: string; href: string; icon: string; co
     { label: 'Employees', href: '/employees', icon: '👤', color: '#14b8a6' },
   ],
   WAITER: [
+    { label: 'My Orders', href: '/my-orders', icon: '📋', color: '#06b6d4' },
     { label: 'Take Order', href: '/pos', icon: '🧾', color: '#f97316' },
     { label: 'Tables', href: '/tables', icon: '🪑', color: '#3b82f6' },
   ],
   CASHIER: [
+    { label: 'My Orders', href: '/my-orders', icon: '📋', color: '#06b6d4' },
     { label: 'Billing', href: '/billing', icon: '💳', color: '#a855f7' },
     { label: 'Orders', href: '/pos', icon: '🧾', color: '#f97316' },
   ],

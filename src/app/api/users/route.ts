@@ -11,7 +11,7 @@ export async function GET() {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     const users = await prisma.user.findMany({
-      where: { outletId: session.user.outletId },
+      where: { outletId: session.user.outletId, role: { not: 'SUPER_ADMIN' } },
       orderBy: { name: 'asc' },
       select: {
         id: true, name: true, email: true, pin: true,
@@ -19,8 +19,8 @@ export async function GET() {
       },
     })
     return NextResponse.json(users)
-  } catch {
-    return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 })
+  } catch (e: any) { console.error("Failed to fetch users:", e?.message)
+    return NextResponse.json({ error: 'Failed to fetch users' }, detail: e?.message, { status: 500 })
   }
 }
 
@@ -58,8 +58,8 @@ export async function POST(req: Request) {
       },
     })
     return NextResponse.json(user, { status: 201 })
-  } catch {
-    return NextResponse.json({ error: 'Failed to create user' }, { status: 500 })
+  } catch (e: any) { console.error("Failed to create user:", e?.message)
+    return NextResponse.json({ error: 'Failed to create user' }, detail: e?.message, { status: 500 })
   }
 }
 
@@ -98,8 +98,8 @@ export async function PUT(req: Request) {
       },
     })
     return NextResponse.json(user)
-  } catch {
-    return NextResponse.json({ error: 'Failed to update user' }, { status: 500 })
+  } catch (e: any) { console.error("Failed to update user:", e?.message)
+    return NextResponse.json({ error: 'Failed to update user' }, detail: e?.message, { status: 500 })
   }
 }
 
@@ -118,7 +118,7 @@ export async function DELETE(req: Request) {
 
     await prisma.user.delete({ where: { id } })
     return NextResponse.json({ success: true })
-  } catch {
-    return NextResponse.json({ error: 'Failed to delete user' }, { status: 500 })
+  } catch (e: any) { console.error("Failed to delete user:", e?.message)
+    return NextResponse.json({ error: 'Failed to delete user' }, detail: e?.message, { status: 500 })
   }
 }
