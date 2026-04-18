@@ -3,7 +3,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 
-interface Category { id: string; name: string }
+interface Category { id: string; name: string; station?: string }
 interface MenuItem { id: string; name: string; categoryId: string; price: number; costPrice: number; isActive: boolean; description: string; station?: string; category?: { name: string; station?: string } }
 
 const blank = (): Omit<MenuItem,'id'|'category'> => ({ name:'', categoryId:'', price:0, costPrice:0, isActive:true, description:'', station:'' })
