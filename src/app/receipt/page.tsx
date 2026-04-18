@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 
@@ -13,7 +13,7 @@ interface ReceiptData {
   paidAt: string; cashierName: string
 }
 
-export default function ReceiptPage() {
+function ReceiptContent() {
   const { data: session } = useSession()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -173,5 +173,13 @@ export default function ReceiptPage() {
         }
       `}</style>
     </div>
+  )
+}
+
+export default function ReceiptPage() {
+  return (
+    <Suspense fallback={<div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:'100vh', background:'#09090b', color:'#71717a' }}>Loading receipt...</div>}>
+      <ReceiptContent />
+    </Suspense>
   )
 }
