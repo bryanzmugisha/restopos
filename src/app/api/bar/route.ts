@@ -11,7 +11,7 @@ export async function GET() {
 
     const kots = await prisma.kot.findMany({
       where: {
-        station: { in: ['BAR','COUNTER','ALL'] },
+        station: { in: ['BAR', 'ALL'] },
         order: { outletId: session.user.outletId },
         status: { not: 'CANCELLED' },
       },
@@ -23,14 +23,30 @@ export async function GET() {
             table: true,
             waiter: { select: { name: true } },
             items: {
-              include: { menuItem: { include: { category: true } } },
+              include: {
+                menuItem: {
+                  include: { category: true },
+                },
+              },
             },
           },
         },
       },
     })
 
-    return NextResponse.json(kots)
+    // For each KOT, only include items that belong to BAR station
+    const formatted = kots.map(kot => ({
+      ...kot,
+      order: {
+        ...kot.order,
+        items: kot.order.items.filter(item => {
+          const itemStation = (item.menuItem as any).station || item.menuItem.category?.station || 'KITCHEN'
+          return ['BAR', 'ALL'].includes(itemStation)
+        }),
+      },
+    }))
+
+    return NextResponse.json(formatted)
   } catch (e: any) {
     return NextResponse.json({ error: 'Failed to fetch bar orders', detail: e?.message }, { status: 500 })
   }
@@ -42,7 +58,7 @@ export async function PATCH(req: Request) {
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
     const { kotId, status } = await req.json()
-    const validStatuses = ['IN_PROGRESS','READY','COMPLETED']
+    const validStatuses = ['IN_PROGRESS', 'READY', 'COMPLETED']
     if (!validStatuses.includes(status)) return NextResponse.json({ error: 'Invalid status' }, { status: 400 })
 
     const kot = await prisma.kot.update({
@@ -54,21 +70,18 @@ export async function PATCH(req: Request) {
       },
     })
 
-    // If all KOTs for this order are ready/completed, update order status
-    if (status === 'READY' || status === 'COMPLETED') {
-      const allKots = await prisma.kot.findMany({ where: { orderId: kot.orderId } })
-      const allDone = allKots.every(k => ['READY','COMPLETED'].includes(k.status))
-      const allCompleted = allKots.every(k => k.status === 'COMPLETED')
-      if (allDone) {
-        await prisma.order.update({
-          where: { id: kot.orderId },
-          data: { status: allCompleted ? 'READY' : 'IN_PROGRESS' },
-        })
-      }
+    // Update order status if all KOTs are done
+    const allKots = await prisma.kot.findMany({ where: { orderId: kot.orderId } })
+    const allDone = allKots.every(k => ['READY', 'COMPLETED'].includes(k.status))
+    if (allDone) {
+      await prisma.order.update({
+        where: { id: kot.orderId },
+        data: { status: 'READY' },
+      })
     }
 
     return NextResponse.json(kot)
   } catch (e: any) {
-    return NextResponse.json({ error: 'Failed to update bar order', detail: e?.message }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to update', detail: e?.message }, { status: 500 })
   }
 }

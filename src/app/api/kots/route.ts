@@ -19,27 +19,35 @@ export async function GET() {
       include: {
         order: {
           include: {
-            items: { include: { menuItem: true } },
+            items: { include: { menuItem: { include: { category: true } } } },
             table: true,
           },
         },
       },
     })
 
-    const formatted = kots.map(k => ({
-      id: k.id,
-      kotNumber: k.kotNumber,
-      orderNumber: k.order.orderNumber,
-      tableNo: k.order.table?.name,
-      orderType: k.order.orderType,
-      status: k.status,
-      createdAt: k.createdAt,
-      items: k.order.items.map(i => ({
-        name: i.menuItem.name,
-        quantity: i.quantity,
-        notes: i.notes,
-      })),
-    }))
+    const formatted = kots.map(k => {
+      // Filter items to only show KITCHEN station items
+      const kitchenItems = k.order.items.filter((i: any) => {
+        const itemStation = i.menuItem.station || i.menuItem.category?.station || 'KITCHEN'
+        return ['KITCHEN', 'ALL'].includes(itemStation)
+      })
+      return {
+        id: k.id,
+        kotNumber: k.kotNumber,
+        orderNumber: k.order.orderNumber,
+        tableNo: k.order.table?.name,
+        orderType: k.order.orderType,
+        status: k.status,
+        station: k.station,
+        createdAt: k.createdAt,
+        items: kitchenItems.map((i: any) => ({
+          name: i.menuItem.name,
+          quantity: i.quantity,
+          notes: i.notes,
+        })),
+      }
+    })
 
     return NextResponse.json(formatted)
   } catch (e: any) { console.error("Failed to fetch KOTs:", e?.message)

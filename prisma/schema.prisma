@@ -64,6 +64,7 @@ model MenuItem {
   description String?
   imageUrl    String?
   categoryId  String
+  station     String?  @default("KITCHEN")
   price       Float
   costPrice   Float    @default(0)
   isActive    Boolean  @default(true)

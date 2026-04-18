@@ -4,9 +4,9 @@ import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 
 interface Category { id: string; name: string }
-interface MenuItem { id: string; name: string; categoryId: string; price: number; costPrice: number; isActive: boolean; description: string; category?: { name: string } }
+interface MenuItem { id: string; name: string; categoryId: string; price: number; costPrice: number; isActive: boolean; description: string; station?: string; category?: { name: string; station?: string } }
 
-const blank = (): Omit<MenuItem,'id'|'category'> => ({ name:'', categoryId:'', price:0, costPrice:0, isActive:true, description:'' })
+const blank = (): Omit<MenuItem,'id'|'category'> => ({ name:'', categoryId:'', price:0, costPrice:0, isActive:true, description:'', station:'' })
 
 export default function MenuPage() {
   const { status } = useSession()
@@ -232,6 +232,34 @@ export default function MenuPage() {
                 {cats.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
             </div>
+            {/* Station selector */}
+            <div style={{ marginBottom:'14px' }}>
+              <label style={{ display:'block', color:'#a1a1aa', fontSize:'12px', marginBottom:'5px' }}>Prepared by (Station) *</label>
+              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:'8px' }}>
+                {[
+                  { val:'KITCHEN', label:'🍳 Kitchen', sub:'Chef prepares', color:'#f97316', bg:'#1a0f00', border:'#78350f' },
+                  { val:'BAR', label:'🍺 Bar/Counter', sub:'Bar staff', color:'#6366f1', bg:'#1e1b4b', border:'#4338ca' },
+                  { val:'ALL', label:'📦 All', sub:'Both stations', color:'#22c55e', bg:'#052e16', border:'#16a34a' },
+                ].map(s => {
+                  const effectiveStation = form.station || (form.categoryId ? cats.find(c=>c.id===form.categoryId)?.station || 'KITCHEN' : 'KITCHEN')
+                  const isSelected = form.station ? form.station === s.val : effectiveStation === s.val
+                  return (
+                    <button key={s.val} type='button' onClick={() => setForm(x=>({...x, station: s.val}))}
+                      style={{ padding:'10px 6px', borderRadius:'8px', border:`1px solid ${isSelected ? s.border : C.b}`, background:isSelected ? s.bg : 'transparent', cursor:'pointer', textAlign:'center' }}>
+                      <p style={{ fontSize:'16px', margin:'0 0 2px' }}>{s.label.split(' ')[0]}</p>
+                      <p style={{ fontSize:'11px', color:isSelected ? s.color : C.m, fontWeight:'700', margin:'0 0 1px' }}>{s.label.split(' ').slice(1).join(' ')}</p>
+                      <p style={{ fontSize:'10px', color:'#52525b', margin:0 }}>{s.sub}</p>
+                    </button>
+                  )
+                })}
+              </div>
+              {form.categoryId && !form.station && (
+                <p style={{ color:'#52525b', fontSize:'11px', marginTop:'5px' }}>
+                  Using category default: {cats.find(c=>c.id===form.categoryId)?.station === 'BAR' ? '🍺 Bar' : '🍳 Kitchen'}
+                </p>
+              )}
+            </div>
+
             {form.price > 0 && (
               <div style={{ padding:'10px 14px', borderRadius:'8px', background:'#27272a', marginBottom:'16px', fontSize:'13px' }}>
                 <span style={{ color:C.m }}>Margin: </span><span style={{ color:'#22c55e', fontWeight:'700' }}>{margin(form.price, form.costPrice)}%</span>

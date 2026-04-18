@@ -57,7 +57,10 @@ export async function POST(req: Request) {
       include: { category: true },
     })
     const itemStationMap: Record<string, string> = {}
-    menuItems.forEach(mi => { itemStationMap[mi.id] = mi.category?.station ?? 'KITCHEN' })
+    menuItems.forEach(mi => {
+      // Use item's own station if set, otherwise fall back to category station
+      itemStationMap[mi.id] = (mi as any).station || mi.category?.station || 'KITCHEN'
+    })
 
     const order = await prisma.$transaction(async (tx) => {
       const newOrder = await tx.order.create({
