@@ -9,8 +9,8 @@ export async function GET() {
       orderBy: { sortOrder: 'asc' },
     })
     return NextResponse.json(categories)
-  } catch {
-    return NextResponse.json({ error: 'Failed to fetch categories' }, { status: 500 })
+  } catch (e: any) { console.error("Failed to fetch categories:", e?.message)
+    return NextResponse.json({ error: 'Failed to fetch categories', detail: e?.message }, { status: 500 })
   }
 }
 
@@ -23,7 +23,7 @@ export async function POST(req: Request) {
       data: { name: body.name, sortOrder: body.sortOrder ?? 0 },
     })
     return NextResponse.json(category, { status: 201 })
-  } catch {
-    return NextResponse.json({ error: 'Failed to create category' }, { status: 500 })
+  } catch (e: any) { console.error("Failed to create category:", e?.message)
+    return NextResponse.json({ error: 'Failed to create category', detail: e?.message }, { status: 500 })
   }
 }

@@ -39,8 +39,8 @@ export async function GET() {
     }))
 
     return NextResponse.json(formatted)
-  } catch {
-    return NextResponse.json({ error: 'Failed to fetch KOTs' }, { status: 500 })
+  } catch (e: any) { console.error("Failed to fetch KOTs:", e?.message)
+    return NextResponse.json({ error: 'Failed to fetch KOTs', detail: e?.message }, { status: 500 })
   }
 }
 
@@ -72,7 +72,7 @@ export async function PUT(req: Request) {
     }
 
     return NextResponse.json(kot)
-  } catch {
-    return NextResponse.json({ error: 'Failed to update KOT' }, { status: 500 })
+  } catch (e: any) { console.error("Failed to update KOT:", e?.message)
+    return NextResponse.json({ error: 'Failed to update KOT', detail: e?.message }, { status: 500 })
   }
 }

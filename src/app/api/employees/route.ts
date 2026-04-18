@@ -14,8 +14,8 @@ export async function GET() {
       orderBy: { user: { name: 'asc' } },
     })
     return NextResponse.json(employees)
-  } catch {
-    return NextResponse.json({ error: 'Failed to fetch employees' }, { status: 500 })
+  } catch (e: any) { console.error("Failed to fetch employees:", e?.message)
+    return NextResponse.json({ error: 'Failed to fetch employees', detail: e?.message }, { status: 500 })
   }
 }
 
@@ -51,7 +51,7 @@ export async function POST(req: Request) {
     })
 
     return NextResponse.json(employee, { status: 201 })
-  } catch {
-    return NextResponse.json({ error: 'Failed to create employee' }, { status: 500 })
+  } catch (e: any) { console.error("Failed to create employee:", e?.message)
+    return NextResponse.json({ error: 'Failed to create employee', detail: e?.message }, { status: 500 })
   }
 }

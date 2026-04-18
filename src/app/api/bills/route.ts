@@ -29,8 +29,8 @@ export async function GET(req: Request) {
       },
     })
     return NextResponse.json(bills)
-  } catch {
-    return NextResponse.json({ error: 'Failed to fetch bills' }, { status: 500 })
+  } catch (e: any) { console.error("Failed to fetch bills:", e?.message)
+    return NextResponse.json({ error: 'Failed to fetch bills', detail: e?.message }, { status: 500 })
   }
 }
 

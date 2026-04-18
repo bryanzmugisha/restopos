@@ -25,8 +25,8 @@ export async function GET(req: Request) {
       include: { table: true, customer: true },
     })
     return NextResponse.json(reservations)
-  } catch {
-    return NextResponse.json({ error: 'Failed to fetch reservations' }, { status: 500 })
+  } catch (e: any) { console.error("Failed to fetch reservations:", e?.message)
+    return NextResponse.json({ error: 'Failed to fetch reservations', detail: e?.message }, { status: 500 })
   }
 }
 
@@ -60,8 +60,8 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json(reservation, { status: 201 })
-  } catch {
-    return NextResponse.json({ error: 'Failed to create reservation' }, { status: 500 })
+  } catch (e: any) { console.error("Failed to create reservation:", e?.message)
+    return NextResponse.json({ error: 'Failed to create reservation', detail: e?.message }, { status: 500 })
   }
 }
 
@@ -88,7 +88,7 @@ export async function PUT(req: Request) {
     }
 
     return NextResponse.json(reservation)
-  } catch {
-    return NextResponse.json({ error: 'Failed to update reservation' }, { status: 500 })
+  } catch (e: any) { console.error("Failed to update reservation:", e?.message)
+    return NextResponse.json({ error: 'Failed to update reservation', detail: e?.message }, { status: 500 })
   }
 }

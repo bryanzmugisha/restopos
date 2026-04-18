@@ -10,8 +10,8 @@ export async function GET() {
       include: { category: true },
     })
     return NextResponse.json(items)
-  } catch {
-    return NextResponse.json({ error: 'Failed to fetch menu items' }, { status: 500 })
+  } catch (e: any) { console.error("Failed to fetch menu items:", e?.message)
+    return NextResponse.json({ error: 'Failed to fetch menu items', detail: e?.message }, { status: 500 })
   }
 }
 
@@ -31,8 +31,8 @@ export async function POST(req: Request) {
       },
     })
     return NextResponse.json(item, { status: 201 })
-  } catch {
-    return NextResponse.json({ error: 'Failed to create item' }, { status: 500 })
+  } catch (e: any) { console.error("Failed to create item:", e?.message)
+    return NextResponse.json({ error: 'Failed to create item', detail: e?.message }, { status: 500 })
   }
 }
 
@@ -53,7 +53,7 @@ export async function PUT(req: Request) {
       },
     })
     return NextResponse.json(item)
-  } catch {
-    return NextResponse.json({ error: 'Failed to update item' }, { status: 500 })
+  } catch (e: any) { console.error("Failed to update item:", e?.message)
+    return NextResponse.json({ error: 'Failed to update item', detail: e?.message }, { status: 500 })
   }
 }
