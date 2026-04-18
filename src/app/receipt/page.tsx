@@ -53,8 +53,7 @@ function ReceiptContent() {
       `Thank you for visiting ${d.outletName}! 🙏`,
     ].filter(Boolean).join('\n')
 
-    const text = lines.join('\n')
-    const encoded = encodeURIComponent(text)
+    const encoded = encodeURIComponent(lines)
     // Try WhatsApp Web first, fallback to app
     const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent)
     const waUrl = isMobile ? `whatsapp://send?text=${encoded}` : `https://web.whatsapp.com/send?text=${encoded}`
