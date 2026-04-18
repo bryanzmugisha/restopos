@@ -166,7 +166,7 @@ function ReceiptContent() {
             ['Type', receipt.orderType.replace('_',' ')],
             ['Date', new Date(receipt.paidAt).toLocaleString('en-UG',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})],
             ['Cashier', receipt.cashierName],
-          ].filter(Boolean).map(([label, value]) => (
+          ].filter((x): x is [string, string] => Boolean(x)).map(([label, value]) => (
             <div key={label} style={{ display:'flex', justifyContent:'space-between', marginBottom:'3px' }}>
               <span style={{ color:'#555' }}>{label}:</span>
               <span style={{ fontWeight:'500', textAlign:'right', maxWidth:'60%' }}>{value}</span>
