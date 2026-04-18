@@ -19,8 +19,8 @@ export async function GET() {
       },
     })
     return NextResponse.json(users)
-  } catch (e: any) { console.error("Failed to fetch users:", e?.message)
-    return NextResponse.json({ error: 'Failed to fetch users' }, detail: e?.message, { status: 500 })
+  } catch (e: any) { console.error('Failed to fetch users:', e?.message)
+    return NextResponse.json({ error: 'Failed to fetch users', detail: e?.message }, { status: 500 })
   }
 }
 
