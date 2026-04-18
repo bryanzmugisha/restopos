@@ -34,10 +34,16 @@ export const authOptions: NextAuthOptions = {
         outletId: { label: 'Outlet', type: 'text' },
       },
       async authorize(credentials) {
-        if (!credentials?.pin || !credentials?.outletId) return null
+        if (!credentials?.pin) return null
+        // Search all outlets by PIN — outletId 'all' or missing means search everywhere
+        const where: any = { pin: credentials.pin, isActive: true }
+        if (credentials.outletId && credentials.outletId !== 'all') {
+          where.outletId = credentials.outletId
+        }
         const user = await prisma.user.findFirst({
-          where: { pin: credentials.pin, outletId: credentials.outletId, isActive: true },
+          where,
           include: { outlet: true },
+          orderBy: { createdAt: 'asc' },
         })
         if (!user) return null
         return { id: user.id, name: user.name, email: user.email ?? '', role: user.role, outletId: user.outletId, outletName: user.outlet.name } as any

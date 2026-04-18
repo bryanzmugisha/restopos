@@ -22,7 +22,7 @@ export default function LoginPage() {
 
   const submit = async (p: string) => {
     setLoading(true); setError('')
-    const res = await signIn('pin', { pin: p, outletId: 'outlet-1', redirect: false })
+    const res = await signIn('pin', { pin: p, outletId: 'all', redirect: false })
     setLoading(false)
     if (res?.ok) router.push('/dashboard')
     else { setError('Invalid PIN — try again'); setPin('') }
