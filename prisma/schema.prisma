@@ -1,0 +1,368 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Outlet {
+  id        String   @id @default(cuid())
+  name      String
+  address   String?
+  phone     String?
+  email     String?
+  currency  String   @default("UGX")
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users          User[]
+  floors         Floor[]
+  orders         Order[]
+  reservations   Reservation[]
+  stockTxns      StockTransaction[]
+  purchaseOrders PurchaseOrder[]
+  employees      Employee[]
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String?  @unique
+  pin          String?
+  passwordHash String?
+  role         String   @default("WAITER")
+  outletId     String
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  outlet   Outlet     @relation(fields: [outletId], references: [id])
+  orders   Order[]    @relation("WaiterOrders")
+  employee Employee?
+}
+
+model MenuCategory {
+  id        String     @id @default(cuid())
+  name      String
+  imageUrl  String?
+  sortOrder Int        @default(0)
+  isActive  Boolean    @default(true)
+  createdAt DateTime   @default(now())
+
+  items MenuItem[]
+}
+
+model MenuItem {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  imageUrl    String?
+  categoryId  String
+  price       Float
+  costPrice   Float    @default(0)
+  isActive    Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  category   MenuCategory @relation(fields: [categoryId], references: [id])
+  orderItems OrderItem[]
+  recipes    Recipe[]
+}
+
+model Floor {
+  id        String  @id @default(cuid())
+  outletId  String
+  name      String
+  sortOrder Int     @default(0)
+  isActive  Boolean @default(true)
+
+  outlet Outlet  @relation(fields: [outletId], references: [id])
+  tables Table[]
+}
+
+model Table {
+  id        String  @id @default(cuid())
+  floorId   String
+  name      String
+  capacity  Int     @default(4)
+  status    String  @default("VACANT")
+  positionX Float   @default(0)
+  positionY Float   @default(0)
+  isActive  Boolean @default(true)
+
+  floor        Floor         @relation(fields: [floorId], references: [id])
+  orders       Order[]
+  reservations Reservation[]
+}
+
+model Customer {
+  id            String   @id @default(cuid())
+  name          String
+  phone         String?  @unique
+  email         String?
+  loyaltyPoints Float    @default(0)
+  totalSpent    Float    @default(0)
+  totalVisits   Int      @default(0)
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  orders         Order[]
+  reservations   Reservation[]
+  loyaltyTxns    LoyaltyTransaction[]
+}
+
+model Order {
+  id          String    @id @default(cuid())
+  orderNumber String    @unique
+  outletId    String
+  orderType   String    @default("DINE_IN")
+  status      String    @default("OPEN")
+  tableId     String?
+  customerId  String?
+  waiterId    String?
+  subtotal    Float     @default(0)
+  taxAmount   Float     @default(0)
+  discount    Float     @default(0)
+  totalAmount Float     @default(0)
+  notes       String?
+  openedAt    DateTime  @default(now())
+  closedAt    DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  outlet   Outlet     @relation(fields: [outletId], references: [id])
+  table    Table?     @relation(fields: [tableId], references: [id])
+  customer Customer?  @relation(fields: [customerId], references: [id])
+  waiter   User?      @relation("WaiterOrders", fields: [waiterId], references: [id])
+  items    OrderItem[]
+  kots     Kot[]
+  bills    Bill[]
+  loyaltyTxns LoyaltyTransaction[]
+}
+
+model OrderItem {
+  id         String   @id @default(cuid())
+  orderId    String
+  menuItemId String
+  quantity   Int
+  unitPrice  Float
+  totalPrice Float
+  notes      String?
+  status     String   @default("PENDING")
+  createdAt  DateTime @default(now())
+
+  order    Order    @relation(fields: [orderId], references: [id])
+  menuItem MenuItem @relation(fields: [menuItemId], references: [id])
+}
+
+model Kot {
+  id          String    @id @default(cuid())
+  kotNumber   String
+  orderId     String
+  station     String?
+  status      String    @default("PENDING")
+  printedAt   DateTime?
+  acknowledgedAt DateTime?
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  order Order @relation(fields: [orderId], references: [id])
+}
+
+model Bill {
+  id             String    @id @default(cuid())
+  billNumber     String    @unique
+  orderId        String
+  subtotal       Float
+  taxAmount      Float     @default(0)
+  discountAmount Float     @default(0)
+  totalAmount    Float
+  amountPaid     Float     @default(0)
+  status         String    @default("OPEN")
+  notes          String?
+  generatedAt    DateTime  @default(now())
+  paidAt         DateTime?
+
+  order    Order     @relation(fields: [orderId], references: [id])
+  payments Payment[]
+  billItems BillItem[]
+}
+
+model BillItem {
+  id          String @id @default(cuid())
+  billId      String
+  orderItemId String?
+  name        String
+  quantity    Int
+  unitPrice   Float
+  totalPrice  Float
+
+  bill Bill @relation(fields: [billId], references: [id])
+}
+
+model Payment {
+  id          String   @id @default(cuid())
+  billId      String
+  method      String
+  amount      Float
+  reference   String?
+  processedAt DateTime @default(now())
+
+  bill Bill @relation(fields: [billId], references: [id])
+}
+
+model LoyaltyTransaction {
+  id         String   @id @default(cuid())
+  customerId String
+  orderId    String?
+  points     Float
+  type       String
+  notes      String?
+  createdAt  DateTime @default(now())
+
+  customer Customer @relation(fields: [customerId], references: [id])
+  order    Order?   @relation(fields: [orderId], references: [id])
+}
+
+model Reservation {
+  id              String    @id @default(cuid())
+  outletId        String
+  customerId      String?
+  tableId         String?
+  guestName       String
+  guestPhone      String?
+  guestEmail      String?
+  partySize       Int
+  reservationDate DateTime
+  status          String    @default("BOOKED")
+  notes           String?
+  reminderSent    Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  outlet   Outlet    @relation(fields: [outletId], references: [id])
+  customer Customer? @relation(fields: [customerId], references: [id])
+  table    Table?    @relation(fields: [tableId], references: [id])
+}
+
+model Ingredient {
+  id           String   @id @default(cuid())
+  name         String
+  unit         String
+  currentStock Float    @default(0)
+  reorderLevel Float    @default(0)
+  costPerUnit  Float    @default(0)
+  supplierId   String?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  supplier      Supplier?          @relation(fields: [supplierId], references: [id])
+  stockTxns     StockTransaction[]
+  recipes       Recipe[]
+  poItems       PurchaseOrderItem[]
+}
+
+model Recipe {
+  id           String @id @default(cuid())
+  menuItemId   String
+  ingredientId String
+  quantity     Float
+
+  menuItem   MenuItem   @relation(fields: [menuItemId], references: [id])
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id])
+
+  @@unique([menuItemId, ingredientId])
+}
+
+model StockTransaction {
+  id           String   @id @default(cuid())
+  outletId     String
+  ingredientId String
+  type         String
+  quantity     Float
+  stockBefore  Float
+  stockAfter   Float
+  unitCost     Float?
+  reference    String?
+  notes        String?
+  createdBy    String?
+  createdAt    DateTime @default(now())
+
+  outlet     Outlet     @relation(fields: [outletId], references: [id])
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id])
+}
+
+model Supplier {
+  id          String   @id @default(cuid())
+  name        String
+  contactName String?
+  phone       String?
+  email       String?
+  address     String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  ingredients    Ingredient[]
+  purchaseOrders PurchaseOrder[]
+}
+
+model PurchaseOrder {
+  id          String    @id @default(cuid())
+  poNumber    String    @unique
+  outletId    String
+  supplierId  String
+  status      String    @default("DRAFT")
+  totalAmount Float     @default(0)
+  notes       String?
+  orderedAt   DateTime?
+  receivedAt  DateTime?
+  createdAt   DateTime  @default(now())
+
+  outlet   Outlet              @relation(fields: [outletId], references: [id])
+  supplier Supplier            @relation(fields: [supplierId], references: [id])
+  items    PurchaseOrderItem[]
+}
+
+model PurchaseOrderItem {
+  id           String @id @default(cuid())
+  poId         String
+  ingredientId String
+  orderedQty   Float
+  receivedQty  Float  @default(0)
+  unitCost     Float
+  totalCost    Float
+
+  po         PurchaseOrder @relation(fields: [poId], references: [id])
+  ingredient Ingredient    @relation(fields: [ingredientId], references: [id])
+}
+
+model Employee {
+  id           String    @id @default(cuid())
+  userId       String    @unique
+  outletId     String
+  position     String?
+  joiningDate  DateTime?
+  salaryType   String    @default("MONTHLY")
+  salaryAmount Float     @default(0)
+  isActive     Boolean   @default(true)
+
+  user       User        @relation(fields: [userId], references: [id])
+  outlet     Outlet      @relation(fields: [outletId], references: [id])
+  attendance Attendance[]
+}
+
+model Attendance {
+  id          String    @id @default(cuid())
+  employeeId  String
+  clockIn     DateTime  @default(now())
+  clockOut    DateTime?
+  hoursWorked Float?
+  notes       String?
+
+  employee Employee @relation(fields: [employeeId], references: [id])
+}

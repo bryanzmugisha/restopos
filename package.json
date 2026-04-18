@@ -1,0 +1,49 @@
+{
+  "name": "restopos",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "dev:socket": "node socket-server.js",
+    "dev:all": "concurrently \"next dev\" \"node socket-server.js\"",
+    "build": "next build",
+    "start": "next start",
+    "db:migrate": "prisma migrate dev",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:generate": "prisma generate",
+    "db:reset": "prisma migrate reset --force && tsx prisma/seed.ts",
+    "db:studio": "prisma studio"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "next": "^14.2.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "@prisma/client": "^5.14.0",
+    "next-auth": "^4.24.7",
+    "bcryptjs": "^2.4.3",
+    "date-fns": "^3.6.0",
+    "zustand": "^4.5.2",
+    "zod": "^3.23.8",
+    "lucide-react": "^0.383.0",
+    "recharts": "^2.12.7",
+    "react-hot-toast": "^2.4.1",
+    "uuid": "^10.0.0",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5",
+    "concurrently": "^8.2.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@types/bcryptjs": "^2.4.6",
+    "typescript": "^5.4.5",
+    "prisma": "^5.14.0",
+    "tsx": "^4.11.2",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.0"
+  }
+}
