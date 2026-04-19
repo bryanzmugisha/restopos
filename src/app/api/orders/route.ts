@@ -14,11 +14,17 @@ export async function GET(req: Request) {
     const session = await getAuth()
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     const { searchParams } = new URL(req.url)
-    const status = searchParams.get('status')
+    const statusParam = searchParams.get('status')
+    // Support comma-separated statuses
+    const statusFilter = statusParam
+      ? statusParam.includes(',')
+        ? { status: { in: statusParam.split(',') } }
+        : { status: statusParam }
+      : { status: { not: 'CANCELLED' } }
     const orders = await prisma.order.findMany({
       where: {
         outletId: session.user.outletId,
-        ...(status ? { status } : { status: { not: 'CANCELLED' } }),
+        ...statusFilter,
       },
       orderBy: { createdAt: 'desc' },
       take: 50,
