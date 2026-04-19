@@ -31,7 +31,7 @@ export default function OrderNotifier() {
     if ('Notification' in window && Notification.permission === 'granted') {
       const n = new Notification(title, {
         body, icon: '/icons/icon-192x192.png',
-        tag: 'restopos-order', renotify: true,
+        tag: 'restopos-order',
       })
       setTimeout(() => n.close(), 6000)
     }
