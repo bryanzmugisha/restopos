@@ -12,7 +12,7 @@ export function useNotifications() {
   const notify = useCallback((title: string, body: string, icon = '/icons/icon-192x192.png') => {
     // Browser notification
     if ('Notification' in window && Notification.permission === 'granted') {
-      const n = new Notification(title, { body, icon, badge: icon, vibrate: [200, 100, 200] })
+      const n = new Notification(title, { body, icon } as NotificationOptions)
       setTimeout(() => n.close(), 8000)
     }
 
