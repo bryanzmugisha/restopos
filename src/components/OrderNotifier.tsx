@@ -101,3 +101,15 @@ export default function OrderNotifier() {
 
   return null // No UI - just background polling
 }
+
+// Chat notification check - exported for use in chat page
+export async function checkUnreadMessages(): Promise<number> {
+  try {
+    const res = await fetch('/api/chat/conversations')
+    if (res.ok) {
+      const convs = await res.json()
+      return Array.isArray(convs) ? convs.reduce((s: number, c: any) => s + (c.unreadCount || 0), 0) : 0
+    }
+  } catch {}
+  return 0
+}

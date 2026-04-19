@@ -8,6 +8,7 @@ const roleRoutes: Record<string, { label: string; href: string; icon: string; co
     { label: 'All Restaurants', href: '/superadmin', icon: '🏪', color: '#f97316' },
   ],
   ADMIN: [
+    { label: 'Staff Chat', href: '/chat', icon: '💬', color: '#06b6d4' },
     { label: 'POS / Orders', href: '/pos', icon: '🧾', color: '#f97316' },
     { label: 'Tables', href: '/tables', icon: '🪑', color: '#3b82f6' },
     { label: 'Kitchen', href: '/kitchen', icon: '👨‍🍳', color: '#22c55e' },
@@ -25,6 +26,7 @@ const roleRoutes: Record<string, { label: string; href: string; icon: string; co
     { label: 'Settings', href: '/settings', icon: '⚙️', color: '#71717a' },
   ],
   MANAGER: [
+    { label: 'Staff Chat', href: '/chat', icon: '💬', color: '#06b6d4' },
     { label: 'POS / Orders', href: '/pos', icon: '🧾', color: '#f97316' },
     { label: 'Tables', href: '/tables', icon: '🪑', color: '#3b82f6' },
     { label: 'Kitchen', href: '/kitchen', icon: '👨‍🍳', color: '#22c55e' },
@@ -39,6 +41,7 @@ const roleRoutes: Record<string, { label: string; href: string; icon: string; co
     { label: 'Settings', href: '/settings', icon: '⚙️', color: '#71717a' },
   ],
   CASHIER: [
+    { label: 'Staff Chat', href: '/chat', icon: '💬', color: '#06b6d4' },
     { label: 'Billing', href: '/billing', icon: '💳', color: '#a855f7' },
     { label: 'My Orders', href: '/my-orders', icon: '📋', color: '#06b6d4' },
     { label: 'Take Order', href: '/pos', icon: '🧾', color: '#f97316' },
@@ -46,15 +49,18 @@ const roleRoutes: Record<string, { label: string; href: string; icon: string; co
     { label: 'Reports', href: '/reports', icon: '📊', color: '#06b6d4' },
   ],
   WAITER: [
+    { label: 'Staff Chat', href: '/chat', icon: '💬', color: '#06b6d4' },
     { label: 'Take Order', href: '/pos', icon: '🧾', color: '#f97316' },
     { label: 'My Orders', href: '/my-orders', icon: '📋', color: '#06b6d4' },
     { label: 'Tables', href: '/tables', icon: '🪑', color: '#3b82f6' },
     { label: 'Customers', href: '/customers', icon: '👥', color: '#14b8a6' },
   ],
   KITCHEN_STAFF: [
+    { label: 'Staff Chat', href: '/chat', icon: '💬', color: '#06b6d4' },
     { label: 'Kitchen Display', href: '/kitchen', icon: '👨‍🍳', color: '#22c55e' },
   ],
   BAR_STAFF: [
+    { label: 'Staff Chat', href: '/chat', icon: '💬', color: '#06b6d4' },
     { label: 'Bar Display', href: '/bar', icon: '🍺', color: '#6366f1' },
     { label: 'Take Order', href: '/pos', icon: '🧾', color: '#f97316' },
     { label: 'My Orders', href: '/my-orders', icon: '📋', color: '#06b6d4' },
@@ -71,10 +77,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/login')
-    if (status === 'authenticated' && session) {
-      if (session.user.role === 'KITCHEN_STAFF') router.push('/kitchen')
-    }
-  }, [status, session, router])
+  }, [status, router])
 
   if (status === 'loading') return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100dvh', background: '#09090b', color: '#71717a', flexDirection: 'column', gap: '12px' }}>
