@@ -40,7 +40,7 @@ export async function GET() {
       order: {
         ...kot.order,
         items: kot.order.items.filter(item => {
-          const itemStation = (item.menuItem as any).station || item.menuItem.category?.station || 'KITCHEN'
+          const mi = item.menuItem as any; const itemStation = mi.station || mi.category?.station || 'KITCHEN'
           return ['BAR', 'ALL'].includes(itemStation)
         }),
       },

@@ -29,7 +29,7 @@ export async function GET() {
     const formatted = kots.map(k => {
       // Filter items to only show KITCHEN station items
       const kitchenItems = k.order.items.filter((i: any) => {
-        const itemStation = i.menuItem.station || i.menuItem.category?.station || 'KITCHEN'
+        const mitem = i.menuItem as any; const itemStation = mitem.station || mitem.category?.station || 'KITCHEN'
         return ['KITCHEN', 'ALL'].includes(itemStation)
       })
       return {
