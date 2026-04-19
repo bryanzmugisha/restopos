@@ -92,11 +92,10 @@ export default function KitchenPage() {
       {/* Header - always visible, fixed at top */}
       <div style={{ display:'flex', alignItems:'center', gap:'10px', padding:'10px 14px', borderBottom:`1px solid ${C.b}`, flexShrink:0, paddingTop:'max(10px, env(safe-area-inset-top))' }}>
         <button onClick={() => router.push('/dashboard')}
-          style={{ width:'36px', height:'36px', borderRadius:'8px', background:C.s, border:`1px solid ${C.b}`, color:C.t, cursor:'pointer', fontSize:'18px', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+          style={{ width:'42px', height:'42px', borderRadius:'10px', background:'#27272a', border:'1px solid #3f3f46', color:'#fafafa', cursor:'pointer', fontSize:'20px', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, touchAction:'manipulation' }}>
           ←
         </button>
-        <span style={{ fontSize:'20px', flexShrink:0 }}>👨‍🍳</span>
-        <h1 style={{ fontSize:'16px', fontWeight:'700', color:C.t, flex:1, margin:0 }}>Kitchen Display</h1>
+        <h1 style={{ fontSize:'16px', fontWeight:'700', color:C.t, flex:1, margin:0 }}>👨‍🍳 Kitchen Display</h1>
         <div style={{ display:'flex', gap:'12px', alignItems:'center', flexShrink:0 }}>
           {pending > 0 && <div style={{ textAlign:'center' }}><p style={{ fontSize:'20px', fontWeight:'800', color:'#ef4444', margin:0, lineHeight:1 }}>{pending}</p><p style={{ fontSize:'10px', color:C.m, margin:0 }}>New</p></div>}
           {inProgress > 0 && <div style={{ textAlign:'center' }}><p style={{ fontSize:'20px', fontWeight:'800', color:'#f59e0b', margin:0, lineHeight:1 }}>{inProgress}</p><p style={{ fontSize:'10px', color:C.m, margin:0 }}>Cooking</p></div>}

@@ -51,7 +51,7 @@ export async function POST(req: Request) {
     if (!memberIds || memberIds.length === 0)
       return NextResponse.json({ error: 'At least one member required' }, { status: 400 })
 
-    const allMemberIds = [...new Set([session.user.id, ...memberIds])]
+    const allMemberIds = Array.from(new Set([session.user.id, ...memberIds]))
 
     // For direct messages, check if conversation already exists
     if (type === 'DIRECT' && allMemberIds.length === 2) {
