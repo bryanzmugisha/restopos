@@ -10,11 +10,11 @@ export default function OrderNotifier() {
 
   const beep = useCallback(() => {
     try {
-      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext
-      if (!AudioCtx) return
-      const ctx = new AudioCtx()
-      // Double beep
-      [0, 0.3].forEach(delay => {
+      const AC = (window.AudioContext || (window as any).webkitAudioContext) as typeof AudioContext
+      if (!AC) return
+      const ctx = new AC()
+      const delays = [0, 0.3]
+      delays.forEach(delay => {
         const osc = ctx.createOscillator()
         const gain = ctx.createGain()
         osc.connect(gain); gain.connect(ctx.destination)
