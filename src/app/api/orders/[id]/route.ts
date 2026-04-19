@@ -18,7 +18,7 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
     if (!order) return NextResponse.json({ error: 'Not found' }, { status: 404 })
     return NextResponse.json(order)
   } catch (e: any) { console.error("Failed to fetch order:", e?.message)
-    return NextResponse.json({ error: 'Failed to fetch order' }, detail: e?.message, { status: 500 })
+    return NextResponse.json({ error: 'Failed to fetch order', detail: e?.message }, { status: 500 })
   }
 }
 
@@ -48,6 +48,6 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 
     return NextResponse.json(order)
   } catch (e: any) { console.error("Failed to update order:", e?.message)
-    return NextResponse.json({ error: 'Failed to update order' }, detail: e?.message, { status: 500 })
+    return NextResponse.json({ error: 'Failed to update order', detail: e?.message }, { status: 500 })
   }
 }
