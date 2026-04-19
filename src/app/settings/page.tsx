@@ -45,7 +45,7 @@ export default function SettingsPage() {
   )
 
   return (
-    <div style={{ height:'100vh', display:'flex', flexDirection:'column', background:C.bg }}>
+    <div className="page-root">
       {toast && <div style={{ position:'fixed', top:'16px', left:'50%', transform:'translateX(-50%)', zIndex:100, background:toastOk?'#14532d':'#450a0a', border:`1px solid ${toastOk?'#22c55e':'#7f1d1d'}`, borderRadius:'10px', padding:'12px 24px', color:toastOk?'#22c55e':'#fca5a5', fontWeight:'600', fontSize:'14px', whiteSpace:'nowrap' }}>{toast}</div>}
 
       <div style={{ display:'flex', alignItems:'center', gap:'12px', padding:'14px 20px', borderBottom:`1px solid ${C.b}`, flexShrink:0 }}>
@@ -60,7 +60,7 @@ export default function SettingsPage() {
         ))}
       </div>
 
-      <div style={{ flex:1, overflowY:'auto', padding:'20px' }}>
+      <div className="scroll-area" style={{ padding: "16px" }}>
         <div style={{ maxWidth:'560px' }}>
 
           {tab === 'general' && (

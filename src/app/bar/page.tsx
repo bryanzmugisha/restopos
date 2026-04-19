@@ -91,7 +91,7 @@ export default function BarPage() {
   )
 
   return (
-    <div style={{ height:'100vh', display:'flex', flexDirection:'column', background:C.bg }}>
+    <div className="page-root">
 
       {/* Header */}
       <div style={{ display:'flex', alignItems:'center', gap:'12px', padding:'12px 20px', borderBottom:`1px solid ${C.b}`, flexShrink:0 }}>
@@ -125,7 +125,7 @@ export default function BarPage() {
       </div>
 
       {/* KOT Grid */}
-      <div style={{ flex:1, overflowY:'auto', padding:'16px' }}>
+      <div className="scroll-area" style={{ padding: "12px" }}>
         {filtered.length === 0 ? (
           <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', height:'60%', gap:'12px', color:'#52525b' }}>
             <div style={{ fontSize:'56px' }}>🍺</div>
@@ -133,7 +133,7 @@ export default function BarPage() {
             <p style={{ fontSize:'14px' }}>Drinks orders will appear here</p>
           </div>
         ) : (
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(280px, 1fr))', gap:'14px' }}>
+          <div className="kds-grid">
             {filtered.map(kot => {
               const sc = statusConfig[kot.status as keyof typeof statusConfig] ?? statusConfig.PENDING
               const isUrgent = urgent(kot.createdAt) && kot.status !== 'COMPLETED'

@@ -31,6 +31,14 @@ export default function POSPage() {
   const [toast, setToast] = useState('')
   const [toastOk, setToastOk] = useState(true)
   const [showCart, setShowCart] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
   const [notes, setNotes] = useState('')
 
   useEffect(() => { if (status === 'unauthenticated') router.push('/login') }, [status])
@@ -142,7 +150,7 @@ Send invoice to customer now?`)) {
   const C = { bg: '#09090b', s: '#18181b', b: '#27272a', t: '#fafafa', m: '#71717a', br: '#f97316' }
 
   return (
-    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', background: C.bg }}>
+    <div className="page-root">
       {toast && (
         <div style={{ position: 'fixed', top: '16px', left: '50%', transform: 'translateX(-50%)', zIndex: 200, background: toastOk ? '#14532d' : '#450a0a', border: `1px solid ${toastOk ? '#22c55e' : '#7f1d1d'}`, borderRadius: '10px', padding: '12px 24px', color: toastOk ? '#22c55e' : '#fca5a5', fontWeight: '600', fontSize: '14px', whiteSpace: 'nowrap' }}>
           {toast}
@@ -172,9 +180,9 @@ Send invoice to customer now?`)) {
         )}
       </div>
 
-      <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+      <div className="pos-layout">
         {/* Left — Menu */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
+        <div className="pos-menu">
 
           {/* Table + Customer selectors */}
           <div style={{ padding: '8px 14px', borderBottom: `1px solid ${C.b}`, display: 'flex', gap: '8px', flexShrink: 0, flexWrap: 'wrap' }}>
@@ -219,7 +227,7 @@ Send invoice to customer now?`)) {
 
           {/* Menu grid */}
           <div style={{ flex: 1, overflowY: 'auto', padding: '10px 14px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '8px' }}>
+            <div className="menu-grid">
               {filtered.map(item => {
                 const inCart = cart.find(c => c.menuItemId === item.id)
                 const cat = categories.find(c => c.id === item.categoryId)

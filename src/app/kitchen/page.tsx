@@ -76,7 +76,7 @@ export default function KitchenPage() {
   if (loading) return <div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:'100vh', color:C.m, background:C.bg }}>Loading kitchen...</div>
 
   return (
-    <div style={{ height:'100vh', display:'flex', flexDirection:'column', background:C.bg }}>
+    <div className="page-root">
       <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'12px 20px', borderBottom:`1px solid ${C.b}`, flexShrink:0 }}>
         <div style={{ display:'flex', alignItems:'center', gap:'12px' }}>
           <button onClick={() => router.push('/dashboard')} style={{ background:'none', border:'none', color:C.m, cursor:'pointer', fontSize:'20px' }}>←</button>

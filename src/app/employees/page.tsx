@@ -88,7 +88,7 @@ export default function EmployeesPage() {
   if (loading) return <div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:'100vh', color:C.m, background:C.bg }}>Loading employees...</div>
 
   return (
-    <div style={{ height:'100vh', display:'flex', flexDirection:'column', background:C.bg }}>
+    <div className="page-root">
       {toast && <div style={{ position:'fixed', top:'16px', left:'50%', transform:'translateX(-50%)', zIndex:100, background:C.s, border:`1px solid ${C.b}`, borderRadius:'10px', padding:'12px 24px', color:C.t, fontWeight:'600', fontSize:'14px' }}>{toast}</div>}
 
       <div style={{ display:'flex', alignItems:'center', gap:'12px', padding:'14px 20px', borderBottom:`1px solid ${C.b}`, flexShrink:0 }}>
@@ -153,7 +153,7 @@ export default function EmployeesPage() {
           </div>
 
           {selected && (
-            <div style={{ flex:1, overflowY:'auto', padding:'20px' }}>
+            <div className="scroll-area" style={{ padding: "16px" }}>
               <div style={{ display:'flex', justifyContent:'space-between', marginBottom:'20px' }}>
                 <div style={{ display:'flex', alignItems:'center', gap:'14px' }}>
                   <div style={{ width:'56px', height:'56px', borderRadius:'50%', background:'#27272a', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'22px', fontWeight:'700', color:roleColors[selected.user.role] }}>
@@ -193,7 +193,7 @@ export default function EmployeesPage() {
       )}
 
       {tab === 'attendance' && (
-        <div style={{ flex:1, overflowY:'auto', padding:'20px' }}>
+        <div className="scroll-area" style={{ padding: "16px" }}>
           <div style={{ display:'flex', flexDirection:'column', gap:'8px' }}>
             {employees.map(emp => {
               const cs = clockState[emp.id]

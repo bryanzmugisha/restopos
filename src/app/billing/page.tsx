@@ -108,7 +108,7 @@ export default function BillingPage() {
   const C = { bg: '#09090b', s: '#18181b', b: '#27272a', t: '#fafafa', m: '#71717a', br: '#f97316' }
 
   return (
-    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', background: C.bg }}>
+    <div className="page-root">
       {toast && <div style={{ position: 'fixed', top: '16px', left: '50%', transform: 'translateX(-50%)', zIndex: 100, background: toastOk ? '#14532d' : '#450a0a', border: `1px solid ${toastOk ? '#22c55e' : '#7f1d1d'}`, borderRadius: '10px', padding: '12px 24px', color: toastOk ? '#22c55e' : '#fca5a5', fontWeight: '600', fontSize: '14px', whiteSpace: 'nowrap' }}>{toast}</div>}
 
       {/* Header */}
@@ -118,10 +118,10 @@ export default function BillingPage() {
         <button onClick={fetchOrders} style={{ padding: '7px 12px', borderRadius: '8px', background: C.s, border: `1px solid ${C.b}`, color: C.m, cursor: 'pointer', fontSize: '12px' }}>🔄 Refresh</button>
       </div>
 
-      <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+      <div className="two-panel">
 
         {/* Orders list */}
-        <div style={{ width: '320px', borderRight: `1px solid ${C.b}`, display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
+        <div className='panel-left' style={{ width: 'min(320px, 100vw)', minWidth: '0', flexShrink: 0 }}>
           <div style={{ padding: '10px 14px', borderBottom: `1px solid ${C.b}` }}>
             <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search orders..."
               style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', background: C.s, border: `1px solid ${C.b}`, color: C.t, fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} />
@@ -187,7 +187,7 @@ export default function BillingPage() {
               </div>
             </div>
           ) : (
-            <div style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
+            <div className='scroll-area' style={{ padding: '16px' }}>
               {/* Order summary */}
               <div style={{ background: C.s, border: `1px solid ${C.b}`, borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>

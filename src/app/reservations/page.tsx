@@ -92,7 +92,7 @@ export default function ReservationsPage() {
   if (loading) return <div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:'100vh', color:C.m, background:C.bg }}>Loading reservations...</div>
 
   return (
-    <div style={{ height:'100vh', display:'flex', flexDirection:'column', background:C.bg }}>
+    <div className="page-root">
       {toast && <div style={{ position:'fixed', top:'16px', left:'50%', transform:'translateX(-50%)', zIndex:100, background:C.s, border:`1px solid ${C.b}`, borderRadius:'10px', padding:'12px 24px', color:C.t, fontWeight:'600', fontSize:'14px' }}>{toast}</div>}
 
       <div style={{ display:'flex', alignItems:'center', gap:'12px', padding:'14px 20px', borderBottom:`1px solid ${C.b}`, flexShrink:0 }}>
@@ -147,7 +147,7 @@ export default function ReservationsPage() {
         </div>
 
         {selected && (
-          <div style={{ flex:1, overflowY:'auto', padding:'20px' }}>
+          <div className="scroll-area" style={{ padding: "16px" }}>
             <div style={{ display:'flex', justifyContent:'space-between', marginBottom:'20px' }}>
               <h2 style={{ color:C.t, fontWeight:'700', fontSize:'20px' }}>{selected.guestName}</h2>
               <button onClick={() => setSelected(null)} style={{ background:'none', border:'none', color:C.m, cursor:'pointer', fontSize:'22px' }}>×</button>

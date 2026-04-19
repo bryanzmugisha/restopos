@@ -31,7 +31,7 @@ export default function PerformancePage() {
   const C = { bg:'#09090b', s:'#18181b', b:'#27272a', t:'#fafafa', m:'#71717a', br:'#f97316' }
 
   return (
-    <div style={{ height:'100vh', display:'flex', flexDirection:'column', background:C.bg }}>
+    <div className="page-root">
       <div style={{ display:'flex', alignItems:'center', gap:'12px', padding:'14px 20px', borderBottom:`1px solid ${C.b}`, flexShrink:0 }}>
         <button onClick={() => router.push('/dashboard')} style={{ background:'none', border:'none', color:C.m, cursor:'pointer', fontSize:'20px' }}>←</button>
         <h1 style={{ fontSize:'18px', fontWeight:'700', color:C.t, flex:1 }}>🏆 Staff Performance</h1>
@@ -42,7 +42,7 @@ export default function PerformancePage() {
         </div>
       </div>
 
-      <div style={{ flex:1, overflowY:'auto', padding:'20px' }}>
+      <div className="scroll-area" style={{ padding: "16px" }}>
         {loading ? (
           <div style={{ textAlign:'center', padding:'60px', color:C.m }}>Loading performance data...</div>
         ) : !data?.staff.length ? (

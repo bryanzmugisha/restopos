@@ -107,7 +107,7 @@ export default function TablesPage() {
   if (loading) return <div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:'100vh', color:C.m, background:C.bg }}>Loading tables...</div>
 
   return (
-    <div style={{ height:'100vh', display:'flex', flexDirection:'column', background:C.bg }}>
+    <div className="page-root">
       {toast && <div style={{ position:'fixed', top:'16px', left:'50%', transform:'translateX(-50%)', zIndex:100, background:C.s, border:`1px solid ${C.b}`, borderRadius:'10px', padding:'12px 24px', color:C.t, fontWeight:'600', fontSize:'14px' }}>{toast}</div>}
 
       {/* Header */}
@@ -152,7 +152,7 @@ export default function TablesPage() {
       )}
 
       {/* Tables grid */}
-      <div style={{ flex:1, overflowY:'auto', padding:'20px' }}>
+      <div className="scroll-area" style={{ padding: "16px" }}>
         {!currentFloor || currentFloor.tables.length === 0 ? (
           <div style={{ textAlign:'center', padding:'60px', color:'#52525b' }}>
             <p style={{ fontSize:'48px', marginBottom:'12px' }}>🪑</p>

@@ -89,7 +89,7 @@ export default function ReportsPage() {
   const C = { bg:'#09090b', s:'#18181b', b:'#27272a', t:'#fafafa', m:'#71717a', br:'#f97316' }
 
   return (
-    <div style={{ minHeight:'100vh', background:C.bg }}>
+    <div className="page-root" style={{ overflowY: "auto" }}>
       <style>{`
         @media print {
           .no-print { display: none !important; }
