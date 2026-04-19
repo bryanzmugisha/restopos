@@ -12,7 +12,7 @@ export async function GET() {
     })
     return NextResponse.json(ingredients)
   } catch (e: any) { console.error("Failed to fetch inventory:", e?.message)
-    return NextResponse.json({ error: 'Failed to fetch inventory' }, detail: e?.message, { status: 500 })
+    return NextResponse.json({ error: 'Failed to fetch inventory', detail: e?.message }, { status: 500 })
   }
 }
 
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
     })
     return NextResponse.json(ingredient, { status: 201 })
   } catch (e: any) { console.error("Failed to create ingredient:", e?.message)
-    return NextResponse.json({ error: 'Failed to create ingredient' }, detail: e?.message, { status: 500 })
+    return NextResponse.json({ error: 'Failed to create ingredient', detail: e?.message }, { status: 500 })
   }
 }
 
@@ -69,6 +69,6 @@ export async function PUT(req: Request) {
 
     return NextResponse.json(ingredient)
   } catch (e: any) { console.error("Failed to adjust stock:", e?.message)
-    return NextResponse.json({ error: 'Failed to adjust stock' }, detail: e?.message, { status: 500 })
+    return NextResponse.json({ error: 'Failed to adjust stock', detail: e?.message }, { status: 500 })
   }
 }
