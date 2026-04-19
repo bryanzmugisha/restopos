@@ -1,3 +1,4 @@
+'use client'
 export default function OfflinePage() {
   return (
     <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', height:'100dvh', background:'#09090b', gap:'16px', fontFamily:'system-ui' }}>
