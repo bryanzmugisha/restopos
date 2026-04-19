@@ -108,20 +108,7 @@ export default function EmployeesPage() {
   const clockedIn = Object.values(clockState).filter(s => s.in).length
   const C = { bg:'#09090b', s:'#18181b', b:'#27272a', t:'#fafafa', m:'#71717a', br:'#f97316' }
 
-  const FieldInput = ({ label, k, type='text', ph='', options=null }: any) => (
-    <div style={{ marginBottom:'12px' }}>
-      <label style={{ display:'block', color:'#a1a1aa', fontSize:'12px', marginBottom:'4px' }}>{label}</label>
-      {options ? (
-        <select value={(form as any)[k]} onChange={e => setForm(x=>({...x,[k]:e.target.value}))}
-          style={{ width:'100%', padding:'9px 12px', borderRadius:'8px', background:'#27272a', border:`1px solid ${C.b}`, color:C.t, fontSize:'14px', outline:'none' }}>
-          {options.map((o: any) => <option key={o.value} value={o.value}>{o.label}</option>)}
-        </select>
-      ) : (
-        <input type={type} value={(form as any)[k]} onChange={e => setForm(x=>({...x,[k]:type==='number'?Number(e.target.value):e.target.value}))} placeholder={ph}
-          style={{ width:'100%', padding:'9px 12px', borderRadius:'8px', background:'#27272a', border:`1px solid ${C.b}`, color:C.t, fontSize:'14px', outline:'none' }} />
-      )}
-    </div>
-  )
+
 
   if (loading) return <div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:'100dvh', background:C.bg, color:C.m }}>Loading...</div>
 
@@ -205,14 +192,52 @@ export default function EmployeesPage() {
           <div style={{ background:'#1c1c1e', borderTop:`1px solid ${C.b}`, borderRadius:'20px 20px 0 0', width:'100%', maxHeight:'90vh', overflowY:'auto', padding:'20px 16px', paddingBottom:'max(20px,env(safe-area-inset-bottom))' }} onClick={e => e.stopPropagation()}>
             <h2 style={{ color:C.t, fontWeight:'700', marginBottom:'16px', fontSize:'16px' }}>{modal === 'add' ? '+ Add Employee' : `Edit — ${selected?.user.name}`}</h2>
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'0 12px' }}>
-              <div style={{ gridColumn:'1/-1' }}><FieldInput label="Full Name *" k="name" ph="e.g. James Okello" /></div>
-              <FieldInput label="PIN *" k="pin" ph="4-6 digits" />
-              <FieldInput label="Email" k="email" type="email" ph="optional" />
-              <FieldInput label="Position" k="position" ph="e.g. Head Waiter" />
-              <FieldInput label="Role *" k="role" options={['WAITER','CASHIER','KITCHEN_STAFF','BAR_STAFF','DELIVERY_STAFF','MANAGER'].map(r=>({value:r,label:r.replace(/_/g,' ')}))} />
-              <FieldInput label="Salary Type" k="salaryType" options={[{value:'MONTHLY',label:'Monthly'},{value:'HOURLY',label:'Hourly'}]} />
-              <FieldInput label="Salary Amount (UGX)" k="salaryAmount" type="number" ph="0" />
-              <FieldInput label="Joining Date" k="joiningDate" type="date" />
+              <div style={{ gridColumn:'1/-1' }}><div style={{ marginBottom:'12px' }}>
+              <label style={{ display:'block', color:'#a1a1aa', fontSize:'12px', marginBottom:'4px' }}>Full Name *</label>
+              <input type="text" value={(form as any).name ?? ''} onChange={e => setForm(x=>({...x,name:e.target.value}))} placeholder="e.g. James Okello"
+                style={{ width:'100%', padding:'9px 12px', borderRadius:'8px', background:'#27272a', border:'1px solid #27272a', color:'#fafafa', fontSize:'14px', outline:'none' }} />
+            </div></div>
+              <div style={{ marginBottom:'12px' }}>
+              <label style={{ display:'block', color:'#a1a1aa', fontSize:'12px', marginBottom:'4px' }}>PIN *</label>
+              <input type="text" value={(form as any).pin ?? ''} onChange={e => setForm(x=>({...x,pin:e.target.value}))} placeholder="4-6 digits"
+                style={{ width:'100%', padding:'9px 12px', borderRadius:'8px', background:'#27272a', border:'1px solid #27272a', color:'#fafafa', fontSize:'14px', outline:'none' }} />
+            </div>
+              <div style={{ marginBottom:'12px' }}>
+              <label style={{ display:'block', color:'#a1a1aa', fontSize:'12px', marginBottom:'4px' }}>Email</label>
+              <input type="email" value={(form as any).email ?? ''} onChange={e => setForm(x=>({...x,email:e.target.value}))} placeholder="optional"
+                style={{ width:'100%', padding:'9px 12px', borderRadius:'8px', background:'#27272a', border:'1px solid #27272a', color:'#fafafa', fontSize:'14px', outline:'none' }} />
+            </div>
+              <div style={{ marginBottom:'12px' }}>
+              <label style={{ display:'block', color:'#a1a1aa', fontSize:'12px', marginBottom:'4px' }}>Position</label>
+              <input type="text" value={(form as any).position ?? ''} onChange={e => setForm(x=>({...x,position:e.target.value}))} placeholder="e.g. Head Waiter"
+                style={{ width:'100%', padding:'9px 12px', borderRadius:'8px', background:'#27272a', border:'1px solid #27272a', color:'#fafafa', fontSize:'14px', outline:'none' }} />
+            </div>
+              <div style={{ marginBottom:'12px' }}>
+              <label style={{ display:'block', color:'#a1a1aa', fontSize:'12px', marginBottom:'4px' }}>Role *</label>
+              <select value={form.role} onChange={e => setForm(x => ({ ...x, role: e.target.value }))}
+                style={{ width:'100%', padding:'9px 12px', borderRadius:'8px', background:'#27272a', border:'1px solid #27272a', color:'#fafafa', fontSize:'14px', outline:'none' }}>
+                {['WAITER','CASHIER','KITCHEN_STAFF','BAR_STAFF','DELIVERY_STAFF','MANAGER'].map(r =>
+                  <option key={r} value={r}>{r.replace(/_/g, ' ')}</option>
+                )}
+              </select>
+            </div>
+              <div style={{ marginBottom:'12px' }}>
+              <label style={{ display:'block', color:'#a1a1aa', fontSize:'12px', marginBottom:'4px' }}>Salary Type</label>
+              <select value={(form as any).salaryType} onChange={e => setForm(x=>({...x,salaryType:e.target.value}))}
+                style={{ width:'100%', padding:'9px 12px', borderRadius:'8px', background:'#27272a', border:'1px solid #27272a', color:'#fafafa', fontSize:'14px', outline:'none' }}>
+                {([{value:'MONTHLY',label:'Monthly').map((o: any) => <option key={o.value} value={o.value}>{o.label}</option>)}
+              </select>
+            </div>
+              <div style={{ marginBottom:'12px' }}>
+              <label style={{ display:'block', color:'#a1a1aa', fontSize:'12px', marginBottom:'4px' }}>Salary Amount (UGX)</label>
+              <input type="number" value={(form as any).salaryAmount ?? ''} onChange={e => setForm(x=>({...x,salaryAmount:Number(e.target.value)}))} placeholder="0"
+                style={{ width:'100%', padding:'9px 12px', borderRadius:'8px', background:'#27272a', border:'1px solid #27272a', color:'#fafafa', fontSize:'14px', outline:'none' }} />
+            </div>
+              <div style={{ marginBottom:'12px' }}>
+              <label style={{ display:'block', color:'#a1a1aa', fontSize:'12px', marginBottom:'4px' }}>Joining Date</label>
+              <input type="date" value={(form as any).joiningDate ?? ''} onChange={e => setForm(x=>({...x,joiningDate:e.target.value}))} placeholder=""
+                style={{ width:'100%', padding:'9px 12px', borderRadius:'8px', background:'#27272a', border:'1px solid #27272a', color:'#fafafa', fontSize:'14px', outline:'none' }} />
+            </div>
             </div>
             <div style={{ display:'flex', gap:'8px', marginTop:'8px' }}>
               <button onClick={() => setModal(null)} style={{ flex:1, padding:'11px', borderRadius:'10px', border:`1px solid ${C.b}`, background:'transparent', color:C.m, cursor:'pointer' }}>Cancel</button>
