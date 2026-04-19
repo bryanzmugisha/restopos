@@ -323,3 +323,9 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
   .no-print { display: none !important; }
   body { background: white !important; color: #111 !important; }
 }
+
+/* Bottom padding for pages to account for PWA install banner */
+.scroll-area { padding-bottom: max(80px, env(safe-area-inset-bottom)) !important; }
+
+/* Ensure modals appear above PWA banner */
+.modal-overlay { z-index: 1000 !important; }

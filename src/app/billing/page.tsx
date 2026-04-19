@@ -90,10 +90,13 @@ export default function BillingPage() {
       })
       const data = await res.json()
       if (res.ok) {
-        setLastBillId(data.id ?? '')
+        const billId = data.id ?? ''
+        setLastBillId(billId)
         setPaid(true)
         setOrders(o => o.filter(x => x.id !== selected.id))
         showToast(`✅ Bill processed — ${fmt(change)} change`)
+        // Auto-show receipt after 1.5s
+        if (billId) setTimeout(() => { window.open(`/receipt?id=${billId}`, '_blank') }, 1500)
       } else showToast('❌ ' + (data.detail || data.error), false)
     } catch (e: any) { showToast('❌ ' + (e?.message || 'Error'), false) }
     setProcessing(false)

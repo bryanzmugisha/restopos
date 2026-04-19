@@ -83,3 +83,43 @@ self.addEventListener('sync', (event) => {
     console.log('Background sync: orders')
   }
 })
+
+// Push notifications - show when app receives a push
+self.addEventListener('push', (event) => {
+  if (!event.data) return
+  try {
+    const data = event.data.json()
+    event.waitUntil(
+      self.registration.showNotification(data.title || 'RestoPOS', {
+        body: data.body || 'You have a new notification',
+        icon: '/icons/icon-192x192.png',
+        badge: '/icons/icon-72x72.png',
+        tag: data.tag || 'restopos',
+        renotify: true,
+        vibrate: [200, 100, 200],
+        data: { url: data.url || '/dashboard' },
+        actions: data.actions || []
+      })
+    )
+  } catch {}
+})
+
+// Handle notification click - open the app
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close()
+  const url = event.notification.data?.url || '/dashboard'
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
+      // If app is already open, focus it
+      for (const client of list) {
+        if (client.url.includes(self.location.origin)) {
+          client.focus()
+          client.navigate(url)
+          return
+        }
+      }
+      // Otherwise open new window
+      return clients.openWindow(url)
+    })
+  )
+})
