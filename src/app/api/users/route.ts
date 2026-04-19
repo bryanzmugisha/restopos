@@ -7,8 +7,8 @@ export async function GET() {
   try {
     const session = await getAuth()
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    if (!['ADMIN','MANAGER'].includes(session.user.role))
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    // All staff can see colleagues (needed for chat)
+    // Admins see full details, others see basic info
 
     const users = await prisma.user.findMany({
       where: { outletId: session.user.outletId, role: { not: 'SUPER_ADMIN' } },

@@ -2,40 +2,46 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getAuth } from '@/lib/auth'
 
-export const dynamic = 'force-dynamic'
-
 function makeOrderNumber() {
   const d = new Date()
-  return `ORD-${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}-${Math.floor(Math.random()*9000)+1000}`
+  const date = `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`
+  const rand = Math.floor(Math.random() * 9000) + 1000
+  return `ORD-${date}-${rand}`
+}
+
+function makeKotNumber() {
+  return `KOT-${String(Date.now()).slice(-6)}`
 }
 
 export async function GET(req: Request) {
   try {
     const session = await getAuth()
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
     const { searchParams } = new URL(req.url)
-    const statusParam = searchParams.get('status')
-    // Support comma-separated statuses
-    const statusFilter = statusParam
-      ? statusParam.includes(',')
-        ? { status: { in: statusParam.split(',') } }
-        : { status: statusParam }
-      : { status: { not: 'CANCELLED' } }
+    const status = searchParams.get('status')
+    const limit = parseInt(searchParams.get('limit') ?? '50')
+
     const orders = await prisma.order.findMany({
       where: {
         outletId: session.user.outletId,
-        ...statusFilter,
+        ...(status ? { status } : { status: { not: 'CANCELLED' } }),
       },
       orderBy: { createdAt: 'desc' },
-      take: 50,
+      take: limit,
       include: {
-        items: { include: { menuItem: { include: { category: true } } } },
-        table: true, customer: true, waiter: true, kots: true, bills: true,
+        items: { include: { menuItem: true } },
+        table: true,
+        customer: true,
+        waiter: true,
+        kots: true,
+        bills: true,
       },
     })
     return NextResponse.json(orders)
   } catch (e: any) {
-    return NextResponse.json({ error: 'Failed to fetch orders', detail: e?.message }, { status: 500 })
+    console.error('GET /api/orders error:', e?.message)
+    return NextResponse.json({ error: 'Failed to fetch orders' }, { status: 500 })
   }
 }
 
@@ -47,28 +53,25 @@ export async function POST(req: Request) {
     const body = await req.json()
     const { orderType, tableId, customerId, items, notes, subtotal, taxAmount, totalAmount } = body
 
-    if (!items || items.length === 0)
+    if (!items || items.length === 0) {
       return NextResponse.json({ error: 'Order must have at least one item' }, { status: 400 })
+    }
 
+    // Verify outlet exists
     const outlet = await prisma.outlet.findUnique({ where: { id: session.user.outletId } })
-    if (!outlet) return NextResponse.json({ error: 'Outlet not found' }, { status: 400 })
+    if (!outlet) {
+      return NextResponse.json({ error: 'Outlet not found. Please log out and log in again.' }, { status: 400 })
+    }
 
+    // Verify user exists in DB
     const user = await prisma.user.findUnique({ where: { id: session.user.id } })
-    if (!user) return NextResponse.json({ error: 'User not found' }, { status: 400 })
+    if (!user) {
+      return NextResponse.json({ error: 'User session invalid. Please log out and log in again.' }, { status: 400 })
+    }
 
-    // Fetch menu items with their category stations
-    const menuItemIds = items.map((i: any) => i.menuItemId)
-    const menuItems = await prisma.menuItem.findMany({
-      where: { id: { in: menuItemIds } },
-      include: { category: true },
-    })
-    const itemStationMap: Record<string, string> = {}
-    menuItems.forEach(mi => {
-      // Use item's own station if set, otherwise fall back to category station
-      itemStationMap[mi.id] = (mi as any).station || mi.category?.station || 'KITCHEN'
-    })
-
+    // Create order + items + KOT
     const order = await prisma.$transaction(async (tx) => {
+      // 1. Create the order
       const newOrder = await tx.order.create({
         data: {
           orderNumber: makeOrderNumber(),
@@ -85,6 +88,7 @@ export async function POST(req: Request) {
         },
       })
 
+      // 2. Create order items
       await tx.orderItem.createMany({
         data: items.map((item: any) => ({
           orderId: newOrder.id,
@@ -97,21 +101,21 @@ export async function POST(req: Request) {
         })),
       })
 
-      // Create separate KOTs per station
-      const stations: string[] = Array.from(new Set(items.map((i: any) => itemStationMap[i.menuItemId] ?? 'KITCHEN')))
-      for (const station of stations) {
-        await tx.kot.create({
-          data: {
-            kotNumber: `KOT-${String(Date.now()).slice(-6)}-${station.slice(0,3)}`,
-            orderId: newOrder.id,
-            station,
-            status: 'PENDING',
-          },
-        })
-      }
+      // 3. Create KOT
+      await tx.kot.create({
+        data: {
+          kotNumber: makeKotNumber(),
+          orderId: newOrder.id,
+          status: 'PENDING',
+        },
+      })
 
+      // 4. Mark table as OCCUPIED if dine-in
       if (tableId) {
-        await tx.table.update({ where: { id: tableId }, data: { status: 'OCCUPIED' } })
+        await tx.table.update({
+          where: { id: tableId },
+          data: { status: 'OCCUPIED' },
+        })
       }
 
       return newOrder
@@ -119,7 +123,12 @@ export async function POST(req: Request) {
 
     return NextResponse.json(order, { status: 201 })
   } catch (e: any) {
-    console.error('POST /api/orders error:', e?.message)
-    return NextResponse.json({ error: 'Failed to create order', detail: e?.message }, { status: 500 })
+    // Return the actual DB error message to help debug
+    const msg = e?.message ?? 'Unknown error'
+    console.error('POST /api/orders error:', msg)
+    return NextResponse.json(
+      { error: 'Failed to create order', detail: msg },
+      { status: 500 }
+    )
   }
 }

@@ -43,9 +43,7 @@ model User {
 
   outlet   Outlet     @relation(fields: [outletId], references: [id])
   orders   Order[]    @relation("WaiterOrders")
-  employee             Employee?
-  conversationMembers  ConversationMember[]
-  sentMessages         Message[]
+  employee Employee?
 }
 
 model MenuCategory {
@@ -54,7 +52,6 @@ model MenuCategory {
   imageUrl  String?
   sortOrder Int        @default(0)
   isActive  Boolean    @default(true)
-  station   String     @default("KITCHEN")
   createdAt DateTime   @default(now())
 
   items MenuItem[]
@@ -66,7 +63,6 @@ model MenuItem {
   description String?
   imageUrl    String?
   categoryId  String
-  station     String?  @default("KITCHEN")
   price       Float
   costPrice   Float    @default(0)
   isActive    Boolean  @default(true)
@@ -148,7 +144,6 @@ model Order {
   kots     Kot[]
   bills    Bill[]
   loyaltyTxns LoyaltyTransaction[]
-  messages    Message[]
 }
 
 model OrderItem {
@@ -170,7 +165,7 @@ model Kot {
   id          String    @id @default(cuid())
   kotNumber   String
   orderId     String
-  station     String?   @default("KITCHEN")
+  station     String?
   status      String    @default("PENDING")
   printedAt   DateTime?
   acknowledgedAt DateTime?
@@ -372,45 +367,4 @@ model Attendance {
   notes       String?
 
   employee Employee @relation(fields: [employeeId], references: [id])
-}
-
-model Conversation {
-  id        String   @id @default(cuid())
-  outletId  String
-  name      String?
-  type      String   @default("DIRECT") // DIRECT or GROUP
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  members  ConversationMember[]
-  messages Message[]
-}
-
-model ConversationMember {
-  id             String   @id @default(cuid())
-  conversationId String
-  userId         String
-  joinedAt       DateTime @default(now())
-  lastReadAt     DateTime @default(now())
-
-  conversation Conversation @relation(fields: [conversationId], references: [id])
-  user         User         @relation(fields: [userId], references: [id])
-
-  @@unique([conversationId, userId])
-}
-
-model Message {
-  id             String   @id @default(cuid())
-  conversationId String
-  senderId       String
-  content        String
-  type           String   @default("TEXT") // TEXT, PING, ORDER_REF, IMAGE
-  orderId        String?
-  metadata       String?  // JSON for extra data
-  isRead         Boolean  @default(false)
-  createdAt      DateTime @default(now())
-
-  conversation Conversation @relation(fields: [conversationId], references: [id])
-  sender       User         @relation(fields: [senderId], references: [id])
-  order        Order?       @relation(fields: [orderId], references: [id])
 }

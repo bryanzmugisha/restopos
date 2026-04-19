@@ -2,8 +2,6 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getAuth } from '@/lib/auth'
 
-export const dynamic = 'force-dynamic'
-
 export async function GET() {
   try {
     const session = await getAuth()
@@ -11,7 +9,6 @@ export async function GET() {
 
     const kots = await prisma.kot.findMany({
       where: {
-        station: { in: ['KITCHEN', 'ALL'] },
         status: { not: 'COMPLETED' },
         order: { outletId: session.user.outletId },
       },
@@ -19,39 +16,31 @@ export async function GET() {
       include: {
         order: {
           include: {
-            items: { include: { menuItem: { include: { category: true } } } },
+            items: { include: { menuItem: true } },
             table: true,
           },
         },
       },
     })
 
-    const formatted = kots.map(k => {
-      // Filter items to only show KITCHEN station items
-      const kitchenItems = k.order.items.filter((i: any) => {
-        const itemStation = i.menuItem.station || i.menuItem.category?.station || 'KITCHEN'
-        return ['KITCHEN', 'ALL'].includes(itemStation)
-      })
-      return {
-        id: k.id,
-        kotNumber: k.kotNumber,
-        orderNumber: k.order.orderNumber,
-        tableNo: k.order.table?.name,
-        orderType: k.order.orderType,
-        status: k.status,
-        station: k.station,
-        createdAt: k.createdAt,
-        items: kitchenItems.map((i: any) => ({
-          name: i.menuItem.name,
-          quantity: i.quantity,
-          notes: i.notes,
-        })),
-      }
-    })
+    const formatted = kots.map(k => ({
+      id: k.id,
+      kotNumber: k.kotNumber,
+      orderNumber: k.order.orderNumber,
+      tableNo: k.order.table?.name,
+      orderType: k.order.orderType,
+      status: k.status,
+      createdAt: k.createdAt,
+      items: k.order.items.map(i => ({
+        name: i.menuItem.name,
+        quantity: i.quantity,
+        notes: i.notes,
+      })),
+    }))
 
     return NextResponse.json(formatted)
   } catch (e: any) { console.error("Failed to fetch KOTs:", e?.message)
-    return NextResponse.json({ error: 'Failed to fetch KOTs', detail: e?.message }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to fetch KOTs' }, detail: e?.message, { status: 500 })
   }
 }
 
@@ -84,6 +73,6 @@ export async function PUT(req: Request) {
 
     return NextResponse.json(kot)
   } catch (e: any) { console.error("Failed to update KOT:", e?.message)
-    return NextResponse.json({ error: 'Failed to update KOT', detail: e?.message }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to update KOT' }, detail: e?.message, { status: 500 })
   }
 }

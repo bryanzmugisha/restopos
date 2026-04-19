@@ -22,7 +22,7 @@ export async function GET(req: Request) {
     })
     return NextResponse.json(customers)
   } catch (e: any) { console.error("Failed to fetch customers:", e?.message)
-    return NextResponse.json({ error: 'Failed to fetch customers', detail: e?.message }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to fetch customers' }, detail: e?.message, { status: 500 })
   }
 }
 
@@ -41,6 +41,6 @@ export async function POST(req: Request) {
     })
     return NextResponse.json(customer, { status: 201 })
   } catch (e: any) { console.error("Failed to create customer:", e?.message)
-    return NextResponse.json({ error: 'Failed to create customer', detail: e?.message }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to create customer' }, detail: e?.message, { status: 500 })
   }
 }
