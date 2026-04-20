@@ -20,7 +20,7 @@ export async function GET(req: Request) {
     if (category) where.category = category
     if (outletId) where.outletId = outletId
 
-    const logs = await prisma.systemLog.findMany({
+    const logs = await (prisma as any).systemLog.findMany({
       where,
       orderBy: { createdAt: 'desc' },
       take: 200,

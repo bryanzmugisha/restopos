@@ -31,16 +31,16 @@ export async function GET() {
       prisma.bill.aggregate({ where: { paidAt: { gte: today }, status: 'PAID' }, _sum: { totalAmount: true } }),
       prisma.bill.aggregate({ where: { paidAt: { gte: weekAgo }, status: 'PAID' }, _sum: { totalAmount: true } }),
       prisma.bill.aggregate({ where: { paidAt: { gte: monthAgo }, status: 'PAID' }, _sum: { totalAmount: true } }),
-      prisma.systemLog.count({ where: { level: 'CRITICAL', createdAt: { gte: weekAgo } } }),
-      prisma.systemLog.count({ where: { level: 'ERROR', createdAt: { gte: weekAgo } } }),
-      prisma.systemLog.findMany({ where: { createdAt: { gte: hourAgo } }, orderBy: { createdAt: 'desc' }, take: 20 }),
+      (prisma as any).systemLog.count({ where: { level: 'CRITICAL', createdAt: { gte: weekAgo } } }),
+      (prisma as any).systemLog.count({ where: { level: 'ERROR', createdAt: { gte: weekAgo } } }),
+      (prisma as any).systemLog.findMany({ where: { createdAt: { gte: hourAgo } }, orderBy: { createdAt: 'desc' }, take: 20 }),
       prisma.order.count({ where: { createdAt: { gte: hourAgo } } }),
     ])
 
     // Per-outlet activity
     const outletStats = await prisma.outlet.findMany({
       where: { isActive: true },
-      select: { id: true, name: true, plan: true },
+      select: { id: true, name: true, plan: true } as any,
     })
 
     const perOutlet = await Promise.all(outletStats.map(async (o) => {

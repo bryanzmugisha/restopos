@@ -28,7 +28,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 
     const outlet = await prisma.outlet.update({
       where: { id: params.id },
-      data: updateData,
+      data: updateData as any,
     })
 
     await logEvent({

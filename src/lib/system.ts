@@ -14,7 +14,7 @@ interface LogParams {
 
 export async function logEvent(params: LogParams) {
   try {
-    await prisma.systemLog.create({
+    await (prisma as any).systemLog.create({
       data: {
         level: params.level,
         category: params.category,
