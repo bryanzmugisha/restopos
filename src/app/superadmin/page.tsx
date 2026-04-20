@@ -33,7 +33,7 @@ interface Outlet {
   currency: string; plan: string; modules: string[] | null; isActive: boolean
   maxStaff: number; maxOrders: number; expiresAt?: string
   todayOrders: number; todayRevenue: number
-  _count: { users: number; orders: number; menuItems: number }
+  _count: { users: number; orders: number }
 }
 
 interface SystemData {

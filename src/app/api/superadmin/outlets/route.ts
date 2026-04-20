@@ -15,7 +15,7 @@ export async function GET() {
     const outlets = await prisma.outlet.findMany({
       orderBy: { createdAt: 'desc' },
       include: {
-        _count: { select: { users: true, orders: true, menuItems: true } },
+        _count: { select: { users: true, orders: true } },
       },
     })
 
