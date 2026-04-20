@@ -23,7 +23,7 @@ export const authOptions: NextAuthOptions = {
         if (!user || !user.passwordHash) return null
         const valid = await bcrypt.compare(credentials.password, user.passwordHash)
         if (!valid) return null
-        return { id: user.id, name: user.name, email: user.email ?? '', role: user.role, outletId: user.outletId, outletName: user.outlet.name } as any
+        return { id: user.id, name: user.name, email: user.email ?? '', role: user.role, outletId: user.outletId, outletName: user.outlet.name, modules: (user.outlet as any).modules ?? null } as any
       },
     }),
     CredentialsProvider({
@@ -46,7 +46,7 @@ export const authOptions: NextAuthOptions = {
           orderBy: { createdAt: 'asc' },
         })
         if (!user) return null
-        return { id: user.id, name: user.name, email: user.email ?? '', role: user.role, outletId: user.outletId, outletName: user.outlet.name } as any
+        return { id: user.id, name: user.name, email: user.email ?? '', role: user.role, outletId: user.outletId, outletName: user.outlet.name, modules: (user.outlet as any).modules ?? null } as any
       },
     }),
   ],
@@ -57,6 +57,7 @@ export const authOptions: NextAuthOptions = {
         token.role = (user as any).role
         token.outletId = (user as any).outletId
         token.outletName = (user as any).outletName
+        token.modules = (user as any).modules
       }
       return token
     },
@@ -65,7 +66,8 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id as string
         session.user.role = token.role as string
         session.user.outletId = token.outletId as string
-        session.user.outletName = token.outletName as string
+        session.user.outletName = token.outletName
+      ;(session.user as any).modules = token.modules as string
       }
       return session
     },

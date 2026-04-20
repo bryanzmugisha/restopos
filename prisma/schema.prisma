@@ -414,3 +414,18 @@ model Message {
   sender       User         @relation(fields: [senderId], references: [id])
   order        Order?       @relation(fields: [orderId], references: [id])
 }
+
+model SystemLog {
+  id        String   @id @default(cuid())
+  outletId  String?
+  level     String   // INFO, WARN, ERROR, CRITICAL
+  category  String   // AUTH, ORDER, PAYMENT, SYSTEM, API
+  message   String
+  metadata  String?  // JSON
+  userId    String?
+  createdAt DateTime @default(now())
+
+  @@index([outletId])
+  @@index([level])
+  @@index([createdAt])
+}
