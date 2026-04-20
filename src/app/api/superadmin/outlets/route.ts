@@ -25,7 +25,11 @@ export async function GET() {
         where: { outletId: o.id, createdAt: { gte: today } },
       })
       const todayRevenue = await prisma.bill.aggregate({
-        where: { outletId: o.id, paidAt: { gte: today }, status: 'PAID' },
+        where: {
+          paidAt: { gte: today },
+          status: 'PAID',
+          order: { outletId: o.id },
+        },
         _sum: { totalAmount: true },
       })
       return {
