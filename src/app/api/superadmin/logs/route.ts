@@ -26,7 +26,7 @@ export async function GET(req: Request) {
       take: 200,
     })
 
-    return NextResponse.json(logs.map(l => ({
+    return NextResponse.json(logs.map((l: any) => ({
       ...l,
       metadata: l.metadata ? JSON.parse(l.metadata) : null,
     })))
