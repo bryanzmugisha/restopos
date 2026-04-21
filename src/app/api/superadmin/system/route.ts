@@ -71,7 +71,7 @@ export async function GET() {
         databaseConnected: true,
       },
       perOutlet,
-      recentLogs: recentLogs.map(l => ({
+      recentLogs: recentLogs.map((l: any) => ({
         ...l,
         metadata: l.metadata ? JSON.parse(l.metadata) : null,
       })),
