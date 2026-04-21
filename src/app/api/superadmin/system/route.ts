@@ -45,8 +45,8 @@ export async function GET() {
 
     const perOutlet = await Promise.all(outletStats.map(async (o) => {
       const [orders24h, lastOrder] = await Promise.all([
-        prisma.order.count({ where: { outletId: o.id, createdAt: { gte: new Date(Date.now() - 24*60*60*1000) } } }),
-        prisma.order.findFirst({ where: { outletId: o.id }, orderBy: { createdAt: 'desc' }, select: { createdAt: true } }),
+        prisma.order.count({ where: { outletId: o.id, createdAt: { gte: new Date(Date.now() - 24*60*60*1000) } } as any }),
+        prisma.order.findFirst({ where: { outletId: o.id } as any, orderBy: { createdAt: 'desc' }, select: { createdAt: true } }),
       ])
       const minutesSinceLast = lastOrder ? Math.floor((Date.now() - lastOrder.createdAt.getTime()) / 60000) : null
       return {
